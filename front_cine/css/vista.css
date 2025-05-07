@@ -1,103 +1,229 @@
-/* CineApp Estilo Oscuro */
-body {
-    margin: 0;
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Segoe UI', sans-serif;
+/* Variables de colores */
+:root {
+    --color-primary: #ffdd00;
+    --color-secondary: #4caf50;
+    --color-accent: #ff9100;
+    --color-dark: #333;
+    --color-light: #fff;
+    --color-gray: #f5f5f5;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
   }
   
-  header {
-    background-color: #e50914;
-    color: white;
+  /* Estilos generales */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background-attachment: fixed;
+    color: var(--color-dark);
+    min-height: 100vh;
     padding: 20px;
+  }
+  
+  /* Encabezado */
+  header {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
     text-align: center;
   }
   
   header h1 {
-    margin: 0;
-    font-size: 2.5em;
+    color: var(--color-dark);
+    font-size: 2.5rem;
+    font-weight: 700;
   }
   
-  header p {
-    margin-top: 5px;
-    font-size: 1.2em;
-  }
-  
+  /* Contenido principal */
   main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  @media (min-width: 992px) {
+    main {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  /* Secciones */
+  section {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius);
     padding: 20px;
-    max-width: 1000px;
-    margin: auto;
+    box-shadow: var(--shadow);
   }
   
-  .card {
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 0 10px #000;
+  section h2 {
+    color: var(--color-dark);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-primary);
   }
   
-  h2 {
-    color: #f5c518;
-  }
-  
+  /* Botones */
   button {
-    background-color: #f5c518;
-    color: #121212;
+    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+    color: var(--color-dark);
     border: none;
-    padding: 10px 15px;
-    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 30px;
     cursor: pointer;
-    border-radius: 5px;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: var(--shadow);
+    margin: 10px 0;
   }
   
   button:hover {
-    background-color: #ffdb4d;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
   
-  input {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .table-wrapper {
-    overflow-x: auto;
-    margin-top: 10px;
-  }
-  
+  /* Tablas */
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 15px;
+    background-color: var(--color-light);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  
+  thead {
+    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
   }
   
   th {
-    background-color: #333;
-    color: #f5c518;
-    padding: 10px;
-  }
-  
-  td {
-    background-color: #222;
-    padding: 10px;
-    border-top: 1px solid #444;
-  }
-  
-  .mensaje {
-    margin-top: 10px;
-    color: #f5c518;
+    color: var(--color-dark);
     font-weight: bold;
   }
   
-  footer {
-    background-color: #1a1a1a;
-    text-align: center;
-    color: #888;
-    padding: 10px;
-    margin-top: 30px;
-    font-size: 0.9em;
+  tbody tr:hover {
+    background-color: var(--color-gray);
   }
   
+  /* Formularios */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    background-color: var(--color-light);
+    transition: box-shadow 0.3s;
+  }
+  
+  input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--color-dark);
+  }
+  
+  /* Mensaje de reserva */
+  #reservaMensaje {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    background-color: var(--color-gray);
+    font-weight: bold;
+  }
+  
+  /* Animaciones */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  section, header {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  /* Badges de categoría */
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: var(--color-accent);
+    color: var(--color-light);
+  }
+  
+  /* Estilo para anunciar películas destacadas */
+  .destacado {
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    color: white;
+    padding: 5px;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  /* Iconos */
+  .icono {
+    margin-right: 5px;
+    font-size: 1.2em;
+  }
+  
+  /* Footer */
+  footer {
+    margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+  }
+  
+  /* Modo oscuro */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-dark: #f5f5f5;
+      --color-light: #333;
+      --color-gray: #444;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #9e8a00, #2d662f);
+    }
+    
+    header, section, footer {
+      background-color: rgba(40, 40, 40, 0.9);
+    }
+    
+    input {
+      background-color: #444;
+      color: #f5f5f5;
+      border-color: #555;
+    }
+    
+    tbody tr:hover {
+      background-color: #3a3a3a;
+    }
+  }

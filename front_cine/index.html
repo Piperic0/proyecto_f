@@ -3,61 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cine App - Reservas</title>
+  <title>CineMax - Sistema de Reservas</title>
   <link rel="stylesheet" href="css/vista.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <header>
-    <h1>🎬 CineApp</h1>
-    <p>Reserva tus entradas de forma rápida y sencilla</p>
+    <h1><i class="fas fa-film"></i> CineMax - Sistema de Reservas</h1>
+    <p>¡Disfruta del mejor cine con nuestra plataforma de reservas!</p>
   </header>
 
   <main>
-    <section class="card">
-      <h2>📽️ Películas</h2>
-      <button onclick="cargarPeliculas()">Cargar Películas</button>
-      <div class="table-wrapper">
+    <!-- Películas -->
+    <section>
+      <h2><i class="fas fa-video"></i> Cartelera Actual</h2>
+      <div class="destacado">
+        <i class="fas fa-star"></i> ¡Nuevos estrenos esta semana! <i class="fas fa-star"></i>
+      </div>
+      <button onclick="cargarPeliculas()"><i class="fas fa-sync-alt"></i> Actualizar Cartelera</button>
+      <div class="tabla-container">
         <table id="tablaPeliculas">
           <thead>
-            <tr><th>ID</th><th>Título</th><th>Género</th><th>Duración</th></tr>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Género</th>
+              <th>Duración</th>
+              <th>Calificación</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
 
-    <section class="card">
-      <h2>📅 Funciones</h2>
-      <button onclick="cargarFunciones()">Cargar Funciones</button>
-      <div class="table-wrapper">
+    <!-- Funciones -->
+    <section>
+      <h2><i class="fas fa-calendar-alt"></i> Horarios Disponibles</h2>
+      <button onclick="cargarFunciones()"><i class="fas fa-clock"></i> Cargar Horarios</button>
+      <div class="filtro">
+        <input type="date" id="filtroFecha" placeholder="Filtrar por fecha">
+        <button onclick="filtrarFunciones()"><i class="fas fa-filter"></i> Filtrar</button>
+      </div>
+      <div class="tabla-container">
         <table id="tablaFunciones">
           <thead>
-            <tr><th>ID</th><th>Pelicula ID</th><th>Sala ID</th><th>Fecha</th><th>Hora</th></tr>
+            <tr>
+              <th>ID</th>
+              <th>Película</th>
+              <th>Sala</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
 
-    <section class="card">
-      <h2>🎟️ Hacer Reserva</h2>
-      <form onsubmit="crearReserva(event)">
-        <input type="number" id="funcionId" placeholder="ID de función" required />
-        <input type="text" id="nombreCliente" placeholder="Nombre del cliente" required />
-        <input type="number" id="cantidad" placeholder="Cantidad de entradas" required />
-        <button type="submit">Reservar</button>
+    <!-- Crear Reserva -->
+    <section>
+      <h2><i class="fas fa-ticket-alt"></i> Reservar Entradas</h2>
+      <form id="formReserva" onsubmit="crearReserva(event)">
+        <div class="form-group">
+          <label for="funcionId"><i class="fas fa-id-card"></i> ID de Función:</label>
+          <input type="number" id="funcionId" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="nombreCliente"><i class="fas fa-user"></i> Nombre Cliente:</label>
+          <input type="text" id="nombreCliente" required placeholder="Ingresa tu nombre completo" />
+        </div>
+        
+        <div class="form-group">
+          <label for="cantidad"><i class="fas fa-users"></i> Cantidad de Entradas:</label>
+          <input type="number" id="cantidad" required min="1" max="10" />
+        </div>
+        
+        <button type="submit"><i class="fas fa-check-circle"></i> Confirmar Reserva</button>
       </form>
-      <p id="reservaMensaje" class="mensaje"></p>
+      <div id="reservaMensaje"></div>
     </section>
 
-    <section class="card">
-      <h2>🔍 Consultar Reservas por Función</h2>
-      <input type="number" id="consultaFuncionId" placeholder="ID de función" />
-      <button onclick="consultarReservas()">Consultar</button>
-      <div class="table-wrapper">
+    <!-- Consultar Reservas por Función -->
+    <section>
+      <h2><i class="fas fa-search"></i> Consultar Reservas</h2>
+      <div class="search-container">
+        <input type="number" id="consultaFuncionId" placeholder="Ingresa el ID de función" />
+        <button onclick="consultarReservas()"><i class="fas fa-search"></i> Buscar</button>
+      </div>
+      <div class="tabla-container">
         <table id="tablaReservas">
           <thead>
-            <tr><th>Cliente</th><th>Cantidad</th><th>Película</th><th>Sala</th><th>Fecha</th><th>Hora</th></tr>
+            <tr>
+              <th>Cliente</th>
+              <th>Entradas</th>
+              <th>Película</th>
+              <th>Sala</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
@@ -66,30 +112,102 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 CineApp. Todos los derechos reservados.</p>
+    <p>&copy; 2025 CineMax - Todos los derechos reservados</p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
   </footer>
 
   <script>
     const API = 'http://localhost:5000/api';
 
+    // Cargar datos al iniciar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarPeliculas();
+      cargarFunciones();
+    });
+
     async function cargarPeliculas() {
-      const res = await fetch(`${API}/peliculas`);
-      const data = await res.json();
-      const tbody = document.querySelector('#tablaPeliculas tbody');
-      tbody.innerHTML = '';
-      data.forEach(p => {
-        tbody.innerHTML += `<tr><td>${p.pelicula_id}</td><td>${p.titulo}</td><td>${p.genero}</td><td>${p.duracion}</td></tr>`;
-      });
+      try {
+        const res = await fetch(${API}/peliculas);
+        const data = await res.json();
+        const tbody = document.querySelector('#tablaPeliculas tbody');
+        tbody.innerHTML = '';
+        
+        data.forEach(p => {
+          // Asignar clase según género para estilizar
+          const generoClass = p.genero.toLowerCase().replace(' ', '-');
+          
+          tbody.innerHTML += `
+            <tr>
+              <td>${p.pelicula_id}</td>
+              <td>${p.titulo}</td>
+              <td><span class="badge ${generoClass}">${p.genero}</span></td>
+              <td>${p.duracion} min</td>
+              <td>⭐ ${(Math.random() * 2 + 3).toFixed(1)}/5</td>
+            </tr>`;
+        });
+      } catch (error) {
+        console.error('Error al cargar películas:', error);
+        alert('Error al cargar las películas. Por favor, intenta más tarde.');
+      }
     }
 
     async function cargarFunciones() {
-      const res = await fetch(`${API}/funciones`);
-      const data = await res.json();
+      try {
+        const res = await fetch(${API}/funciones);
+        const data = await res.json();
+        mostrarFunciones(data);
+      } catch (error) {
+        console.error('Error al cargar funciones:', error);
+        alert('Error al cargar los horarios. Por favor, intenta más tarde.');
+      }
+    }
+
+    function mostrarFunciones(funciones) {
       const tbody = document.querySelector('#tablaFunciones tbody');
       tbody.innerHTML = '';
-      data.forEach(f => {
-        tbody.innerHTML += `<tr><td>${f.funcion_id}</td><td>${f.pelicula_id}</td><td>${f.sala_id}</td><td>${f.fecha}</td><td>${f.hora}</td></tr>`;
-      });
+      
+      // Obtener nombres de películas para mostrarlos en lugar de IDs
+      fetch(${API}/peliculas)
+        .then(res => res.json())
+        .then(peliculas => {
+          const peliculasMap = {};
+          peliculas.forEach(p => {
+            peliculasMap[p.pelicula_id] = p.titulo;
+          });
+          
+          funciones.forEach(f => {
+            const nombrePelicula = peliculasMap[f.pelicula_id] || Película ${f.pelicula_id};
+            const fechaFormateada = new Date(f.fecha).toLocaleDateString('es-ES');
+            
+            tbody.innerHTML += `
+              <tr>
+                <td>${f.funcion_id}</td>
+                <td>${nombrePelicula}</td>
+                <td>Sala ${f.sala_id}</td>
+                <td>${fechaFormateada}</td>
+                <td>${f.hora}</td>
+              </tr>`;
+          });
+        });
+    }
+
+    function filtrarFunciones() {
+      const fecha = document.getElementById('filtroFecha').value;
+      if (!fecha) {
+        cargarFunciones();
+        return;
+      }
+      
+      fetch(${API}/funciones)
+        .then(res => res.json())
+        .then(data => {
+          const filtradas = data.filter(f => f.fecha.includes(fecha));
+          mostrarFunciones(filtradas);
+        });
     }
 
     async function crearReserva(e) {
@@ -97,32 +215,68 @@
       const funcion_id = document.getElementById('funcionId').value;
       const nombre_cliente = document.getElementById('nombreCliente').value;
       const cantidad = document.getElementById('cantidad').value;
-      const res = await fetch(`${API}/reservas`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ funcion_id, nombre_cliente, cantidad })
-      });
-      const result = await res.json();
-      document.getElementById('reservaMensaje').innerText = result.message || result.error;
+      
+      try {
+        const res = await fetch(${API}/reservas, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ funcion_id, nombre_cliente, cantidad })
+        });
+        
+        const result = await res.json();
+        const mensajeElement = document.getElementById('reservaMensaje');
+        
+        if (result.error) {
+          mensajeElement.innerText = result.error;
+          mensajeElement.className = 'error-message';
+        } else {
+          mensajeElement.innerText = result.message || '¡Reserva creada con éxito!';
+          mensajeElement.className = 'success-message';
+          document.getElementById('formReserva').reset();
+        }
+      } catch (error) {
+        console.error('Error al crear reserva:', error);
+        document.getElementById('reservaMensaje').innerText = 'Error al procesar la reserva. Intenta nuevamente.';
+        document.getElementById('reservaMensaje').className = 'error-message';
+      }
     }
 
     async function consultarReservas() {
       const id = document.getElementById('consultaFuncionId').value;
-      if (!id) return alert('Ingresa un ID de función');
-      const res = await fetch(`${API}/consultas/reservas-funcion/${id}`);
-      const data = await res.json();
-      const tbody = document.querySelector('#tablaReservas tbody');
-      tbody.innerHTML = '';
-      data.forEach(r => {
-        tbody.innerHTML += `<tr>
-          <td>${r.nombre_cliente}</td>
-          <td>${r.cantidad}</td>
-          <td>${r.titulo}</td>
-          <td>${r.sala}</td>
-          <td>${r.fecha}</td>
-          <td>${r.hora}</td>
-        </tr>`;
-      });
+      if (!id) {
+        alert('Por favor, ingresa un ID de función');
+        return;
+      }
+      
+      try {
+        const res = await fetch(${API}/consultas/reservas-funcion/${id});
+        const data = await res.json();
+        
+        const tbody = document.querySelector('#tablaReservas tbody');
+        tbody.innerHTML = '';
+        
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="no-data">No hay reservas para esta función</td></tr>';
+          return;
+        }
+        
+        data.forEach(r => {
+          const fechaFormateada = new Date(r.fecha).toLocaleDateString('es-ES');
+          
+          tbody.innerHTML += `
+            <tr>
+              <td>${r.nombre_cliente}</td>
+              <td>${r.cantidad}</td>
+              <td>${r.titulo}</td>
+              <td>Sala ${r.sala}</td>
+              <td>${fechaFormateada}</td>
+              <td>${r.hora}</td>
+            </tr>`;
+        });
+      } catch (error) {
+        console.error('Error al consultar reservas:', error);
+        alert('Error al consultar las reservas. Por favor, intenta más tarde.');
+      }
     }
   </script>
 </body>
