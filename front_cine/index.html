@@ -1,13 +1,129 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cine App - Reservas</title>
+  <link rel="stylesheet" href="css/vista.css" />
+</head>
+<body>
+  <header>
+    <h1>🎬 CineApp</h1>
+    <p>Reserva tus entradas de forma rápida y sencilla</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>📽️ Películas</h2>
+      <button onclick="cargarPeliculas()">Cargar Películas</button>
+      <div class="table-wrapper">
+        <table id="tablaPeliculas">
+          <thead>
+            <tr><th>ID</th><th>Título</th><th>Género</th><th>Duración</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>📅 Funciones</h2>
+      <button onclick="cargarFunciones()">Cargar Funciones</button>
+      <div class="table-wrapper">
+        <table id="tablaFunciones">
+          <thead>
+            <tr><th>ID</th><th>Pelicula ID</th><th>Sala ID</th><th>Fecha</th><th>Hora</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🎟️ Hacer Reserva</h2>
+      <form onsubmit="crearReserva(event)">
+        <input type="number" id="funcionId" placeholder="ID de función" required />
+        <input type="text" id="nombreCliente" placeholder="Nombre del cliente" required />
+        <input type="number" id="cantidad" placeholder="Cantidad de entradas" required />
+        <button type="submit">Reservar</button>
+      </form>
+      <p id="reservaMensaje" class="mensaje"></p>
+    </section>
+
+    <section class="card">
+      <h2>🔍 Consultar Reservas por Función</h2>
+      <input type="number" id="consultaFuncionId" placeholder="ID de función" />
+      <button onclick="consultarReservas()">Consultar</button>
+      <div class="table-wrapper">
+        <table id="tablaReservas">
+          <thead>
+            <tr><th>Cliente</th><th>Cantidad</th><th>Película</th><th>Sala</th><th>Fecha</th><th>Hora</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 CineApp. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    const API = 'http://localhost:5000/api';
+
+    async function cargarPeliculas() {
+      const res = await fetch(`${API}/peliculas`);
+      const data = await res.json();
+      const tbody = document.querySelector('#tablaPeliculas tbody');
+      tbody.innerHTML = '';
+      data.forEach(p => {
+        tbody.innerHTML += `<tr><td>${p.pelicula_id}</td><td>${p.titulo}</td><td>${p.genero}</td><td>${p.duracion}</td></tr>`;
+      });
+    }
+
+    async function cargarFunciones() {
+      const res = await fetch(`${API}/funciones`);
+      const data = await res.json();
+      const tbody = document.querySelector('#tablaFunciones tbody');
+      tbody.innerHTML = '';
+      data.forEach(f => {
+        tbody.innerHTML += `<tr><td>${f.funcion_id}</td><td>${f.pelicula_id}</td><td>${f.sala_id}</td><td>${f.fecha}</td><td>${f.hora}</td></tr>`;
+      });
+    }
+
+    async function crearReserva(e) {
+      e.preventDefault();
+      const funcion_id = document.getElementById('funcionId').value;
+      const nombre_cliente = document.getElementById('nombreCliente').value;
+      const cantidad = document.getElementById('cantidad').value;
+      const res = await fetch(`${API}/reservas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ funcion_id, nombre_cliente, cantidad })
+      });
+      const result = await res.json();
+      document.getElementById('reservaMensaje').innerText = result.message || result.error;
+    }
+
+    async function consultarReservas() {
+      const id = document.getElementById('consultaFuncionId').value;
+      if (!id) return alert('Ingresa un ID de función');
+      const res = await fetch(`${API}/consultas/reservas-funcion/${id}`);
+      const data = await res.json();
+      const tbody = document.querySelector('#tablaReservas tbody');
+      tbody.innerHTML = '';
+      data.forEach(r => {
+        tbody.innerHTML += `<tr>
+          <td>${r.nombre_cliente}</td>
+          <td>${r.cantidad}</td>
+          <td>${r.titulo}</td>
+          <td>${r.sala}</td>
+          <td>${r.fecha}</td>
+          <td>${r.hora}</td>
+        </tr>`;
+      });
+    }
+  </script>
+</body>
 </html>
