@@ -1,28 +1,30 @@
 {
+  "name": "proyecto-final-cine-backend",
+  "version": "1.0.0",
+  "description": "Backend del proyecto final de cine con Express y PostgreSQL",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"No hay tests definidos aún\""
+  },
+  "keywords": [
+    "cine",
+    "express",
+    "postgresql",
+    "api"
+  ],
+  "author": "Felipe Rojas",
+  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "mysql2": "^3.14.0",
     "pg": "^8.15.5",
-    "postgres": "^3.4.5"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
-  "name": "parcial-2-andres-rojas",
-  "version": "1.0.0",
-  "main": "DB.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Piperic0/Parcial-2.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Piperic0/Parcial-2/issues"
-  },
-  "homepage": "https://github.com/Piperic0/Parcial-2#readme",
-  "description": ""
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
 }

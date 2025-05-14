@@ -32,7 +32,7 @@
       <div class="table-wrapper">
         <table id="tablaFunciones">
           <thead>
-            <tr><th>ID</th><th>Pelicula ID</th><th>Sala ID</th><th>Fecha</th><th>Hora</th></tr>
+            <tr><th>ID</th><th>Título</th><th>Sala</th><th>Fecha</th><th>Hora</th></tr>
           </thead>
           <tbody></tbody>
         </table>
@@ -42,7 +42,7 @@
     <section class="card">
       <h2>🎟️ Hacer Reserva</h2>
       <form onsubmit="crearReserva(event)">
-        <input type="number" id="funcionId" placeholder="ID de función" required />
+        <select id="funcionId" required></select>
         <input type="text" id="nombreCliente" placeholder="Nombre del cliente" required />
         <input type="number" id="cantidad" placeholder="Cantidad de entradas" required />
         <button type="submit">Reservar</button>
@@ -52,7 +52,9 @@
 
     <section class="card">
       <h2>🔍 Consultar Reservas por Función</h2>
-      <input type="number" id="consultaFuncionId" placeholder="ID de función" />
+      <select id="consultaFuncionId">
+        <option value="">Seleccione una función</option>
+      </select>
       <button onclick="consultarReservas()">Consultar</button>
       <div class="table-wrapper">
         <table id="tablaReservas">
@@ -72,6 +74,15 @@
   <script>
     const API = 'http://localhost:5000/api';
 
+    function formatearFecha(fechaISO) {
+      const date = new Date(fechaISO);
+      return date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+
     async function cargarPeliculas() {
       const res = await fetch(`${API}/peliculas`);
       const data = await res.json();
@@ -84,12 +95,40 @@
 
     async function cargarFunciones() {
       const res = await fetch(`${API}/funciones`);
-      const data = await res.json();
+      const funciones = await res.json();
+
+      const pelis = await fetch(`${API}/peliculas`).then(r => r.json());
+      const salas = await fetch(`${API}/salas`).then(r => r.json());
+
+      const getTitulo = id => (pelis.find(p => p.pelicula_id == id) || {}).titulo || `Película ${id}`;
+      const getSala = id => (salas.find(s => s.sala_id == id) || {}).nombre || `Sala ${id}`;
+
       const tbody = document.querySelector('#tablaFunciones tbody');
+      const selectReserva = document.getElementById('funcionId');
+      const selectConsulta = document.getElementById('consultaFuncionId');
+
       tbody.innerHTML = '';
-      data.forEach(f => {
-        tbody.innerHTML += `<tr><td>${f.funcion_id}</td><td>${f.pelicula_id}</td><td>${f.sala_id}</td><td>${f.fecha}</td><td>${f.hora}</td></tr>`;
-      });
+      selectReserva.innerHTML = '';
+      selectConsulta.innerHTML = '<option value="">Seleccione una función</option>';
+
+      for (const f of funciones) {
+        const titulo = getTitulo(f.pelicula_id);
+        const sala = getSala(f.sala_id);
+        const fechaBonita = formatearFecha(f.fecha);
+
+        tbody.innerHTML += `<tr>
+          <td>${f.funcion_id}</td>
+          <td>${titulo}</td>
+          <td>${sala}</td>
+          <td>${fechaBonita}</td>
+          <td>${f.hora}</td>
+        </tr>`;
+
+        const texto = `${titulo} | ${sala} | ${fechaBonita} ${f.hora}`;
+        const option = `<option value="${f.funcion_id}">${texto}</option>`;
+        selectReserva.innerHTML += option;
+        selectConsulta.innerHTML += option;
+      }
     }
 
     async function crearReserva(e) {
@@ -97,33 +136,56 @@
       const funcion_id = document.getElementById('funcionId').value;
       const nombre_cliente = document.getElementById('nombreCliente').value;
       const cantidad = document.getElementById('cantidad').value;
+
       const res = await fetch(`${API}/reservas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ funcion_id, nombre_cliente, cantidad })
       });
+
       const result = await res.json();
-      document.getElementById('reservaMensaje').innerText = result.message || result.error;
+      const mensaje = document.getElementById('reservaMensaje');
+      mensaje.innerText = result.message || result.error;
+
+      // ✅ Limpiar campos del formulario
+      document.getElementById('funcionId').value = '';
+      document.getElementById('nombreCliente').value = '';
+      document.getElementById('cantidad').value = '';
+
+      // ✅ Ocultar mensaje después de 3 segundos
+      setTimeout(() => {
+        mensaje.innerText = '';
+      }, 3000);
     }
 
     async function consultarReservas() {
       const id = document.getElementById('consultaFuncionId').value;
-      if (!id) return alert('Ingresa un ID de función');
+      if (!id) return alert('Selecciona una función');
+
       const res = await fetch(`${API}/consultas/reservas-funcion/${id}`);
       const data = await res.json();
       const tbody = document.querySelector('#tablaReservas tbody');
       tbody.innerHTML = '';
       data.forEach(r => {
+        const fechaBonita = formatearFecha(r.fecha);
         tbody.innerHTML += `<tr>
           <td>${r.nombre_cliente}</td>
           <td>${r.cantidad}</td>
           <td>${r.titulo}</td>
           <td>${r.sala}</td>
-          <td>${r.fecha}</td>
+          <td>${fechaBonita}</td>
           <td>${r.hora}</td>
         </tr>`;
       });
+
+      // ✅ Limpiar select después de consultar
+      document.getElementById('consultaFuncionId').value = '';
     }
+
+    // Cargar funciones automáticamente
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarFunciones();
+    });
   </script>
 </body>
 </html>
