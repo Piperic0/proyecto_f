@@ -3,189 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cine App - Reservas</title>
+  <title>CineApp - Inicio</title>
   <link rel="stylesheet" href="css/vista.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <script src="https://kit.fontawesome.com/a2d0b5f9f7.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <header>
-    <h1>🎬 CineApp</h1>
-    <p>Reserva tus entradas de forma rápida y sencilla</p>
+  <header class="header">
+    <div class="logo">
+      <i class="fas fa-film"></i>
+      <span>CineApp</span>
+    </div>
+    <nav class="navbar">
+      <a href="peliculas.html">Cartelera</a>
+      <a href="funciones.html">Funciones</a>
+      <a href="reservas.html">Reservas</a>
+      <a href="consultas.html">Consultas</a>
+    </nav>
   </header>
 
-  <main>
-    <section class="card">
-      <h2>📽️ Películas</h2>
-      <button onclick="cargarPeliculas()">Cargar Películas</button>
-      <div class="table-wrapper">
-        <table id="tablaPeliculas">
-          <thead>
-            <tr><th>ID</th><th>Título</th><th>Género</th><th>Duración</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+  <main class="main-content">
+    <section class="bienvenida">
+      <h1>🎬 Bienvenido a <span class="resaltado">CineApp</span></h1>
+      <p>Explora películas, funciones y reserva tus entradas con facilidad</p>
+    </section>
+
+    <section class="preview-seccion">
+      <div class="seccion">
+        <h2><i class="fas fa-video"></i> Cartelera</h2>
+        <p>Consulta los últimos estrenos y películas en cartelera.</p>
+        <a href="peliculas.html" class="btn-ir">Ir a Cartelera</a>
       </div>
-    </section>
-
-    <section class="card">
-      <h2>📅 Funciones</h2>
-      <button onclick="cargarFunciones()">Cargar Funciones</button>
-      <div class="table-wrapper">
-        <table id="tablaFunciones">
-          <thead>
-            <tr><th>ID</th><th>Título</th><th>Sala</th><th>Fecha</th><th>Hora</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="seccion">
+        <h2><i class="fas fa-calendar-alt"></i> Funciones</h2>
+        <p>Revisa horarios, fechas y salas disponibles.</p>
+        <a href="funciones.html" class="btn-ir">Ir a Funciones</a>
       </div>
-    </section>
-
-    <section class="card">
-      <h2>🎟️ Hacer Reserva</h2>
-      <form onsubmit="crearReserva(event)">
-        <select id="funcionId" required></select>
-        <input type="text" id="nombreCliente" placeholder="Nombre del cliente" required />
-        <input type="number" id="cantidad" placeholder="Cantidad de entradas" required />
-        <button type="submit">Reservar</button>
-      </form>
-      <p id="reservaMensaje" class="mensaje"></p>
-    </section>
-
-    <section class="card">
-      <h2>🔍 Consultar Reservas por Función</h2>
-      <select id="consultaFuncionId">
-        <option value="">Seleccione una función</option>
-      </select>
-      <button onclick="consultarReservas()">Consultar</button>
-      <div class="table-wrapper">
-        <table id="tablaReservas">
-          <thead>
-            <tr><th>Cliente</th><th>Cantidad</th><th>Película</th><th>Sala</th><th>Fecha</th><th>Hora</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="seccion">
+        <h2><i class="fas fa-ticket-alt"></i> Reservas</h2>
+        <p>Haz tus reservas de manera rápida y segura.</p>
+        <a href="reservas.html" class="btn-ir">Ir a Reservas</a>
+      </div>
+      <div class="seccion">
+        <h2><i class="fas fa-search"></i> Consultas</h2>
+        <p>Consulta tus reservas y detalles de funciones.</p>
+        <a href="consultas.html" class="btn-ir">Ir a Consultas</a>
       </div>
     </section>
   </main>
 
-  <footer>
+  <footer class="footer">
     <p>&copy; 2025 CineApp. Todos los derechos reservados.</p>
   </footer>
-
-  <script>
-    const API = 'http://localhost:5000/api';
-
-    function formatearFecha(fechaISO) {
-      const date = new Date(fechaISO);
-      return date.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-    }
-
-    async function cargarPeliculas() {
-      const res = await fetch(`${API}/peliculas`);
-      const data = await res.json();
-      const tbody = document.querySelector('#tablaPeliculas tbody');
-      tbody.innerHTML = '';
-      data.forEach(p => {
-        tbody.innerHTML += `<tr><td>${p.pelicula_id}</td><td>${p.titulo}</td><td>${p.genero}</td><td>${p.duracion}</td></tr>`;
-      });
-    }
-
-    async function cargarFunciones() {
-      const res = await fetch(`${API}/funciones`);
-      const funciones = await res.json();
-
-      const pelis = await fetch(`${API}/peliculas`).then(r => r.json());
-      const salas = await fetch(`${API}/salas`).then(r => r.json());
-
-      const getTitulo = id => (pelis.find(p => p.pelicula_id == id) || {}).titulo || `Película ${id}`;
-      const getSala = id => (salas.find(s => s.sala_id == id) || {}).nombre || `Sala ${id}`;
-
-      const tbody = document.querySelector('#tablaFunciones tbody');
-      const selectReserva = document.getElementById('funcionId');
-      const selectConsulta = document.getElementById('consultaFuncionId');
-
-      tbody.innerHTML = '';
-      selectReserva.innerHTML = '';
-      selectConsulta.innerHTML = '<option value="">Seleccione una función</option>';
-
-      for (const f of funciones) {
-        const titulo = getTitulo(f.pelicula_id);
-        const sala = getSala(f.sala_id);
-        const fechaBonita = formatearFecha(f.fecha);
-
-        tbody.innerHTML += `<tr>
-          <td>${f.funcion_id}</td>
-          <td>${titulo}</td>
-          <td>${sala}</td>
-          <td>${fechaBonita}</td>
-          <td>${f.hora}</td>
-        </tr>`;
-
-        const texto = `${titulo} | ${sala} | ${fechaBonita} ${f.hora}`;
-        const option = `<option value="${f.funcion_id}">${texto}</option>`;
-        selectReserva.innerHTML += option;
-        selectConsulta.innerHTML += option;
-      }
-    }
-
-    async function crearReserva(e) {
-      e.preventDefault();
-      const funcion_id = document.getElementById('funcionId').value;
-      const nombre_cliente = document.getElementById('nombreCliente').value;
-      const cantidad = document.getElementById('cantidad').value;
-
-      const res = await fetch(`${API}/reservas`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ funcion_id, nombre_cliente, cantidad })
-      });
-
-      const result = await res.json();
-      const mensaje = document.getElementById('reservaMensaje');
-      mensaje.innerText = result.message || result.error;
-
-      // ✅ Limpiar campos del formulario
-      document.getElementById('funcionId').value = '';
-      document.getElementById('nombreCliente').value = '';
-      document.getElementById('cantidad').value = '';
-
-      // ✅ Ocultar mensaje después de 3 segundos
-      setTimeout(() => {
-        mensaje.innerText = '';
-      }, 3000);
-    }
-
-    async function consultarReservas() {
-      const id = document.getElementById('consultaFuncionId').value;
-      if (!id) return alert('Selecciona una función');
-
-      const res = await fetch(`${API}/consultas/reservas-funcion/${id}`);
-      const data = await res.json();
-      const tbody = document.querySelector('#tablaReservas tbody');
-      tbody.innerHTML = '';
-      data.forEach(r => {
-        const fechaBonita = formatearFecha(r.fecha);
-        tbody.innerHTML += `<tr>
-          <td>${r.nombre_cliente}</td>
-          <td>${r.cantidad}</td>
-          <td>${r.titulo}</td>
-          <td>${r.sala}</td>
-          <td>${fechaBonita}</td>
-          <td>${r.hora}</td>
-        </tr>`;
-      });
-
-      // ✅ Limpiar select después de consultar
-      document.getElementById('consultaFuncionId').value = '';
-    }
-
-    // Cargar funciones automáticamente
-    window.addEventListener('DOMContentLoaded', () => {
-      cargarFunciones();
-    });
-  </script>
-</body>
-</html>
+</body></html>

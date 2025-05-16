@@ -1,0 +1,73 @@
+body {
+  background-color: #121212;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+form {
+  background-color: #1e1e1e;
+}
+
+.form-label {
+  color: #ccc;
+}
+
+/* Custom Select con imagenes */
+.custom-select-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.funcion-item {
+  flex: 1 1 250px;
+  background-color: #1f1f1f;
+  border: 2px solid #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.3s;
+}
+
+.funcion-item label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  color: #ddd;
+  width: 100%;
+}
+
+.funcion-thumb {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.funcion-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.funcion-title {
+  font-weight: bold;
+  color: #facc15;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #2d2d2d;
+  border-left: 5px solid #facc15;
+}
+
+input[type="radio"]:checked + label .funcion-title {
+  color: #ffe100;
+}
+
+input[type="radio"] {
+  display: none;
+}

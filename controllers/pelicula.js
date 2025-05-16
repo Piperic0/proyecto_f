@@ -24,6 +24,17 @@ const client = require('../DB');
  *               type: array
  *               items:
  *                 type: object
+ *                 properties:
+ *                   pelicula_id:
+ *                     type: integer
+ *                   titulo:
+ *                     type: string
+ *                   genero:
+ *                     type: string
+ *                   duracion:
+ *                     type: integer
+ *                   imagen:
+ *                     type: string
  */
 router.get('/', async (req, res) => {
   try {
@@ -57,7 +68,9 @@ router.get('/', async (req, res) => {
  *                 type: string
  *               duracion:
  *                 type: integer
- *                 description: Duración en minutos
+ *               imagen:
+ *                 type: string
+ *                 description: URL de la imagen (opcional)
  *     responses:
  *       201:
  *         description: Película creada exitosamente
@@ -65,11 +78,11 @@ router.get('/', async (req, res) => {
  *         description: Error al crear la película
  */
 router.post('/', async (req, res) => {
-  const { titulo, genero, duracion } = req.body;
+  const { titulo, genero, duracion, imagen } = req.body;
   try {
     await client.query(
-      'INSERT INTO pelicula (titulo, genero, duracion) VALUES ($1, $2, $3)',
-      [titulo, genero, duracion]
+      'INSERT INTO pelicula (titulo, genero, duracion, imagen) VALUES ($1, $2, $3, $4)',
+      [titulo, genero, duracion, imagen || null]
     );
     res.status(201).json({ message: 'Película creada' });
   } catch (error) {
@@ -107,6 +120,8 @@ router.post('/', async (req, res) => {
  *                 type: string
  *               duracion:
  *                 type: integer
+ *               imagen:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Película actualizada
@@ -115,11 +130,11 @@ router.post('/', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { titulo, genero, duracion } = req.body;
+  const { titulo, genero, duracion, imagen } = req.body;
   try {
     const result = await client.query(
-      'UPDATE pelicula SET titulo=$1, genero=$2, duracion=$3 WHERE pelicula_id=$4',
-      [titulo, genero, duracion, id]
+      'UPDATE pelicula SET titulo=$1, genero=$2, duracion=$3, imagen=$4 WHERE pelicula_id=$5',
+      [titulo, genero, duracion, imagen || null, id]
     );
     if (result.rowCount === 0)
       return res.status(404).json({ message: 'Película no encontrada' });

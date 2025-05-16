@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Películas - CineApp</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./css/peliculas.css" />
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark px-3">
+    <a class="navbar-brand" href="#"><i class="fas fa-film"></i> CineApp</a>
+    <a class="nav-link text-white" href="index.html">Inicio</a>
+  </nav>
+
+  <main class="container mt-5">
+    <h1 class="text-danger mb-4"><i class="fas fa-film"></i> Cartelera de Películas</h1>
+
+    <div class="row" id="contenedorPeliculas"></div>
+
+    <hr class="my-5 text-light" />
+
+    <h2 class="text-light">Agregar nueva película</h2>
+    <form onsubmit="crearPelicula(event)" class="row g-3 bg-dark p-4 rounded shadow mt-3">
+      <div class="col-md-4">
+        <label class="form-label">Título</label>
+        <input type="text" id="titulo" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Género</label>
+        <input type="text" id="genero" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Duración (minutos)</label>
+        <input type="number" id="duracion" class="form-control" required />
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">URL de la imagen</label>
+        <input type="text" id="imagen" class="form-control" placeholder="https://..." oninput="actualizarVistaPrevia()" />
+        <div class="mt-3 text-center">
+          <img id="previewImagen" src="https://via.placeholder.com/300x180?text=Vista+previa" class="img-fluid rounded shadow" style="max-height: 180px;" alt="Vista previa">
+        </div>
+      </div>
+      <div class="col-12 d-flex justify-content-end">
+        <button type="submit" class="btn btn-danger">Guardar</button>
+      </div>
+    </form>
+    <p id="mensaje" class="mt-3 text-light"></p>
+  </main>
+
+  <script>
+    const API = 'http://localhost:5000/api';
+
+    async function cargarPeliculas() {
+      const pelis = await fetch(`${API}/peliculas`).then(r => r.json());
+      const funciones = await fetch(`${API}/funciones`).then(r => r.json());
+
+      const contenedor = document.getElementById('contenedorPeliculas');
+      contenedor.innerHTML = '';
+
+      const imagenes = {
+        'oppenheimer': 'https://upload.wikimedia.org/wikipedia/en/7/74/Oppenheimer_%282023%29.jpg',
+        'barbie': 'https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg',
+        'the batman': 'https://upload.wikimedia.org/wikipedia/en/8/8a/The_Batman_%282022_film%29_poster.jpg',
+        'avatar': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Avatar_The_Way_of_Water_poster.jpg',
+        'dune': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Dune_%282021_film%29.jpg'
+      };
+
+      if (pelis.length === 0) {
+        contenedor.innerHTML = '<p class="text-warning">No hay películas registradas.</p>';
+        return;
+      }
+
+      pelis.forEach(p => {
+        const nombre = p.titulo.toLowerCase();
+        const img = p.imagen || imagenes[nombre] || `https://via.placeholder.com/350x200?text=${encodeURIComponent(p.titulo)}`;
+        const funcionesDePeli = funciones.filter(f => f.pelicula_id == p.pelicula_id);
+        const horarios = funcionesDePeli.map(f => {
+          const fecha = new Date(f.fecha).toLocaleDateString();
+          return `<li><i class="fas fa-clock"></i> ${fecha} - ${f.hora}</li>`;
+        }).join('');
+
+        contenedor.innerHTML += `
+          <div class="col-md-4 mb-4">
+            <div class="card pelicula-card">
+              <img src="${img}" class="card-img-top" alt="${p.titulo}">
+              <div class="card-body bg-dark text-light">
+                <h5 class="card-title">${p.titulo}</h5>
+                <p class="card-text"><strong>Género:</strong> ${p.genero || 'N/D'}<br>
+                <strong>Duración:</strong> ${p.duracion} min</p>
+                <ul class="funciones-lista">${horarios || '<li>No hay funciones programadas</li>'}</ul>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    async function crearPelicula(e) {
+      e.preventDefault();
+      const titulo = document.getElementById('titulo').value;
+      const genero = document.getElementById('genero').value;
+      const duracion = document.getElementById('duracion').value;
+      const imagen = document.getElementById('imagen').value;
+
+      const res = await fetch(`${API}/peliculas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titulo, genero, duracion, imagen })
+      });
+
+      const data = await res.json();
+      document.getElementById('mensaje').innerText = data.message || data.error;
+      document.getElementById('titulo').value = '';
+      document.getElementById('genero').value = '';
+      document.getElementById('duracion').value = '';
+      document.getElementById('imagen').value = '';
+      document.getElementById('previewImagen').src = 'https://via.placeholder.com/300x180?text=Vista+previa';
+      cargarPeliculas();
+    }
+
+    function actualizarVistaPrevia() {
+      const url = document.getElementById('imagen').value.trim();
+      const preview = document.getElementById('previewImagen');
+      preview.src = url || 'https://via.placeholder.com/300x180?text=Vista+previa';
+    }
+
+    window.addEventListener('DOMContentLoaded', cargarPeliculas);
+  </script>
+</body>
+</html>

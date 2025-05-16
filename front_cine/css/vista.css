@@ -1,102 +1,114 @@
-/* CineApp Estilo Oscuro */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  margin: 0;
-  background-color: #121212;
-  color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
+  background-color: #0d0d0d;
+  color: #fff;
+  line-height: 1.6;
 }
 
-header {
-  background-color: #e50914;
-  color: white;
-  padding: 20px;
+.header {
+  background-color: #111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #222;
+}
+
+.logo {
+  font-size: 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #ccc;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #facc15;
+}
+
+.main-content {
+  padding: 2rem;
   text-align: center;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 2.5em;
+.bienvenida h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #facc15;
 }
 
-header p {
-  margin-top: 5px;
-  font-size: 1.2em;
+.bienvenida p {
+  font-size: 1.1rem;
+  color: #ccc;
 }
 
-main {
-  padding: 20px;
-  max-width: 1000px;
-  margin: auto;
+.resaltado {
+  color: #facc15;
 }
 
-.card {
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  box-shadow: 0 0 10px #000;
+.preview-seccion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
 }
 
-h2 {
-  color: #f5c518;
-}
-
-button {
-  background-color: #f5c518;
-  color: #121212;
-  border: none;
-  padding: 10px 15px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #ffdb4d;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 6px 0;
-  border: none;
-  border-radius: 5px;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  margin-top: 10px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-th {
-  background-color: #333;
-  color: #f5c518;
-  padding: 10px;
-}
-
-td {
-  background-color: #222;
-  padding: 10px;
-  border-top: 1px solid #444;
-}
-
-.mensaje {
-  margin-top: 10px;
-  color: #f5c518;
-  font-weight: bold;
-}
-
-footer {
+.seccion {
   background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
   text-align: center;
-  color: #888;
-  padding: 10px;
-  margin-top: 30px;
-  font-size: 0.9em;
+  transition: transform 0.3s ease;
+}
+
+.seccion:hover {
+  transform: scale(1.03);
+}
+
+.seccion h2 {
+  color: #facc15;
+  margin-bottom: 0.5rem;
+}
+
+.seccion p {
+  color: #aaa;
+  margin-bottom: 1rem;
+}
+
+.btn-ir {
+  background-color: #facc15;
+  color: #000;
+  padding: 0.5rem 1.2rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-ir:hover {
+  background-color: #e0b700;
+}
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #111;
+  color: #555;
+  margin-top: 3rem;
 }
