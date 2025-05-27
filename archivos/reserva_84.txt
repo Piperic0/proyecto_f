@@ -1,0 +1,9 @@
+Reserva CineApp
+------------------------
+ID Reserva: 84
+Cliente: pipe
+Función ID: 15
+Sala ID: 7
+Fecha: 18/5/2025
+Hora: 17:00
+Entradas: 4

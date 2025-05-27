@@ -9,26 +9,34 @@
   <link rel="stylesheet" href="./css/reservas.css"/>
 </head>
 <body>
-  <nav class="navbar navbar-dark bg-dark px-3">
-    <a class="navbar-brand" href="#"><i class="fas fa-ticket-alt"></i> CineApp</a>
-    <a class="nav-link text-white" href="index.html">Inicio</a>
-  </nav>
 
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
+    </div>
+    <nav class="navbar">
+      <a href="peliculas.html">Cartelera</a>
+      <a href="funciones.html">Funciones</a>
+      <a href="reservas.html">Reservas</a>
+      <a href="consultas.html">Consultas</a>
+    </nav>
+  </header>
+
+  <!-- Main -->
   <main class="container mt-5">
     <h1 class="text-warning mb-4"><i class="fas fa-ticket-alt"></i> Reservar Entradas</h1>
-    <form onsubmit="crearReserva(event)" class="row g-3 bg-dark p-4 rounded shadow">
-      <div class="col-md-12">
-        <label class="form-label">Selecciona una función</label>
-        <div class="custom-select-container" id="funcionesList">
-          <!-- Opciones con imágenes se cargan aquí -->
-        </div>
+    <form id="reservaForm" class="row g-3 bg-dark p-4 rounded shadow">
+      <div class="col-12">
+        <label for="funcionesList" class="form-label">Selecciona una función</label>
+        <div id="funcionesList" class="custom-select-container"></div>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Nombre del cliente</label>
+        <label for="nombreCliente" class="form-label">Nombre del cliente</label>
         <input type="text" id="nombreCliente" class="form-control" placeholder="Tu nombre" required />
       </div>
       <div class="col-md-2">
-        <label class="form-label">Entradas</label>
+        <label for="cantidad" class="form-label">Entradas</label>
         <input type="number" id="cantidad" class="form-control" min="1" required />
       </div>
       <div class="col-md-2 d-flex align-items-end">
@@ -38,70 +46,97 @@
     <p id="reservaMensaje" class="mt-3 text-light"></p>
   </main>
 
+  <!-- Script -->
   <script>
     const API = 'http://localhost:5000/api';
-    let funcionSeleccionada = null;
+
+    document.addEventListener('DOMContentLoaded', cargarFunciones);
+    document.getElementById('reservaForm').addEventListener('submit', crearReserva);
 
     async function cargarFunciones() {
-      const funciones = await fetch(`${API}/funciones`).then(r => r.json());
-      const pelis = await fetch(`${API}/peliculas`).then(r => r.json());
-      const salas = await fetch(`${API}/salas`).then(r => r.json());
+      try {
+        const [funciones, peliculas, salas] = await Promise.all([
+          fetchJson(`${API}/funciones`),
+          fetchJson(`${API}/peliculas`),
+          fetchJson(`${API}/salas`)
+        ]);
 
-      const container = document.getElementById('funcionesList');
-      container.innerHTML = '';
+        const container = document.getElementById('funcionesList');
+        container.innerHTML = '';
 
-      funciones.forEach(f => {
-        const pelicula = pelis.find(p => p.pelicula_id == f.pelicula_id);
-        const sala = salas.find(s => s.sala_id == f.sala_id);
-        const fecha = new Date(f.fecha).toLocaleDateString('es-ES');
+        funciones.forEach(funcion => {
+          const pelicula = peliculas.find(p => p.pelicula_id === funcion.pelicula_id);
+          const sala = salas.find(s => s.sala_id === funcion.sala_id);
+          const fecha = new Date(funcion.fecha).toLocaleDateString('es-ES');
+          const img = pelicula?.imagen || 'https://via.placeholder.com/60x90?text=Sin+imagen';
 
-        const img = pelicula?.imagen || `https://via.placeholder.com/60x90?text=${encodeURIComponent(pelicula?.titulo || 'Peli')}`;
-
-        const item = document.createElement('div');
-        item.className = 'funcion-item';
-        item.innerHTML = `
-          <input type="radio" name="funcionSeleccionada" id="funcion-${f.funcion_id}" value="${f.funcion_id}" hidden>
-          <label for="funcion-${f.funcion_id}">
-            <img src="${img}" alt="${pelicula?.titulo}" class="funcion-thumb">
-            <div class="funcion-info">
-              <span class="funcion-title">${pelicula?.titulo}</span>
-              <small>${sala?.nombre} | ${fecha} ${f.hora}</small>
+          container.innerHTML += `
+            <div class="funcion-item">
+              <input type="radio" name="funcionSeleccionada" id="funcion-${funcion.funcion_id}" value="${funcion.funcion_id}">
+              <label for="funcion-${funcion.funcion_id}">
+                <img src="${img}" alt="${pelicula?.titulo}" class="funcion-thumb">
+                <div class="funcion-info">
+                  <span class="funcion-title">${pelicula?.titulo || 'Sin título'}</span>
+                  <small>${sala?.nombre || 'Sala N/D'} | ${fecha} ${funcion.hora}</small>
+                </div>
+              </label>
             </div>
-          </label>
-        `;
+          `;
+        });
 
-        container.appendChild(item);
-      });
+      } catch (error) {
+        console.error('❌ Error al cargar funciones:', error);
+        document.getElementById('reservaMensaje').innerText = 'Error al cargar funciones.';
+      }
     }
 
-    async function crearReserva(e) {
-      e.preventDefault();
+    async function crearReserva(event) {
+      event.preventDefault();
 
-      const selected = document.querySelector('input[name="funcionSeleccionada"]:checked');
-      if (!selected) {
+      const funcionSeleccionada = document.querySelector('input[name="funcionSeleccionada"]:checked');
+      const nombreCliente = document.getElementById('nombreCliente').value.trim();
+      const cantidad = parseInt(document.getElementById('cantidad').value);
+
+      if (!funcionSeleccionada) {
         alert('Selecciona una función');
         return;
       }
 
-      const funcion_id = selected.value;
-      const nombre_cliente = document.getElementById('nombreCliente').value;
-      const cantidad = document.getElementById('cantidad').value;
+      if (!nombreCliente || isNaN(cantidad) || cantidad < 1) {
+        alert('Completa todos los campos correctamente');
+        return;
+      }
 
-      const res = await fetch(`${API}/reservas`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ funcion_id, nombre_cliente, cantidad })
-      });
+      const funcion_id = parseInt(funcionSeleccionada.value);
 
-      const result = await res.json();
-      document.getElementById('reservaMensaje').innerText = result.message || result.error;
+      try {
+        const response = await fetch(`${API}/reservas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ funcion_id, nombre_cliente: nombreCliente, cantidad })
+        });
 
-      document.getElementById('nombreCliente').value = '';
-      document.getElementById('cantidad').value = '';
-      document.querySelector('input[name="funcionSeleccionada"]:checked').checked = false;
+        const result = await response.json();
+
+        document.getElementById('reservaMensaje').innerText = response.ok
+          ? '✅ Reserva creada correctamente'
+          : result.message || 'Error al crear reserva';
+
+        if (response.ok) {
+          document.getElementById('reservaForm').reset();
+        }
+
+      } catch (error) {
+        console.error('❌ Error al crear reserva:', error);
+        document.getElementById('reservaMensaje').innerText = 'Error al conectar con el servidor';
+      }
     }
 
-    window.addEventListener('DOMContentLoaded', cargarFunciones);
+    async function fetchJson(url) {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Error al cargar ${url}`);
+      return response.json();
+    }
   </script>
 </body>
 </html>

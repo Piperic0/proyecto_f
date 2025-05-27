@@ -1,13 +1,54 @@
 body {
-  background-color: #121212;
+  font-family: 'Inter', sans-serif;
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat fixed;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.header {
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #222;
+}
+
+.logo a {
+  font-size: 1.6rem;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
   color: #f1f1f1;
-  font-family: 'Segoe UI', sans-serif;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #facc15;
 }
 
 h1 {
   font-weight: bold;
+  color: #f1f1f1;
 }
 
 .table thead th {
   color: #ffc107;
+}
+
+.table tbody td {
+  color: #eee;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 193, 7, 0.1);
 }

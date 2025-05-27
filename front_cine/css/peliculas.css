@@ -1,9 +1,39 @@
 body {
-  background-color: #121212;
-  color: #f1f1f1;
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat fixed;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.header {
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #222;
+}
+
+.logo a {
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #ccc;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #facc15;
 }
 
 h1, h2 {
@@ -20,6 +50,7 @@ h1, h2 {
 
 form {
   background-color: #1e1e1e;
+  border: 1px solid #333;
 }
 
 .card.pelicula-card {
@@ -31,6 +62,8 @@ form {
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 10px;
 }
 
 .card.pelicula-card:hover {
@@ -40,23 +73,26 @@ form {
 
 .card-img-top {
   width: 100%;
-  height: 300px;
+  max-width: 180px;
+  aspect-ratio: 2/3;
   object-fit: cover;
   display: block;
+  margin: 0 auto;
 }
 
 .card-body {
-  padding: 15px;
-  flex-grow: 1;
+  padding: 10px;
+  width: 100%;
 }
 
 .card-title {
   color: #facc15;
   font-weight: 600;
+  font-size: 1rem;
 }
 
 .card-text {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #ddd;
 }
 
@@ -64,7 +100,7 @@ form {
   margin-top: 10px;
   padding-left: 0;
   list-style: none;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #ccc;
 }
 
@@ -72,5 +108,24 @@ form {
   margin-bottom: 4px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+}
+
+button.btn-warning, button.btn-danger {
+  margin-right: 5px;
+  font-size: 0.8rem;
+}
+
+#mensaje {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #f87171;
+}
+
+/* Responsive ajuste */
+@media (max-width: 576px) {
+  .card-img-top {
+    max-width: 140px;
+    aspect-ratio: 2/3;
+  }
 }

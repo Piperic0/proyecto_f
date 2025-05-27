@@ -79,16 +79,26 @@ router.get('/', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   const { titulo, genero, duracion, imagen } = req.body;
+
+  // Validación básica de campos requeridos
+  if (!titulo || !genero || !duracion) {
+    return res.status(400).json({ message: 'Faltan campos requeridos: titulo, genero o duracion' });
+  }
+
   try {
     await client.query(
       'INSERT INTO pelicula (titulo, genero, duracion, imagen) VALUES ($1, $2, $3, $4)',
       [titulo, genero, duracion, imagen || null]
     );
-    res.status(201).json({ message: 'Película creada' });
+    res.status(201).json({ message: 'Película creada exitosamente' });
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear película', error: error.message });
+    res.status(500).json({
+      message: 'Error al crear película',
+      error: error.message
+    });
   }
 });
+
 
 /**
  * @swagger

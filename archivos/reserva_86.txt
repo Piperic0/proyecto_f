@@ -1,0 +1,9 @@
+Reserva CineApp
+------------------------
+ID Reserva: 86
+Cliente: pepe
+Función ID: 14
+Sala ID: 6
+Fecha: 18/5/2025
+Hora: 17:00
+Entradas: 5

@@ -9,26 +9,36 @@
   <link rel="stylesheet" href="./css/consultas.css"/>
 </head>
 <body>
-  <nav class="navbar navbar-dark bg-dark px-3">
-    <a class="navbar-brand" href="#"><i class="fas fa-database"></i> CineApp</a>
-    <a class="nav-link text-white" href="index.html">Inicio</a>
-  </nav>
+
+  <header class="header">
+    <div class="logo">
+      <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
+    </div>
+    <nav class="navbar">
+      <a href="peliculas.html">Cartelera</a>
+      <a href="funciones.html">Funciones</a>
+      <a href="reservas.html">Reservas</a>
+      <a href="consultas.html">Consultas</a>
+    </nav>
+  </header>
 
   <main class="container mt-5">
-    <h1 class="text-info mb-4"><i class="fas fa-search"></i> Consultas</h1>
-    <p class="text-light">Aquí puedes consultar la base de datos (implementa las funciones según tus necesidades).</p>
-
-    <div class="table-responsive mt-4">
-      <table class="table table-dark table-striped">
+    <h1 class="text-warning mb-4"><i class="fas fa-search"></i> Consultar Reservas</h1>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped table-hover shadow rounded">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Campo 1</th>
-            <th>Campo 2</th>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Película</th>
+            <th>Sala</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Entradas</th>
           </tr>
         </thead>
-        <tbody id="tablaConsultas">
-          <!-- Datos dinámicos -->
+        <tbody id="reservasTabla">
+          <!-- Datos cargados por JS -->
         </tbody>
       </table>
     </div>
@@ -37,21 +47,42 @@
   <script>
     const API = 'http://localhost:5000/api';
 
-    async function cargarConsultas() {
-      const res = await fetch(`${API}/consultas`);
-      const data = await res.json();
+    async function cargarReservas() {
+      try {
+        const [reservas, funciones, pelis, salas] = await Promise.all([
+          fetch(`${API}/reservas`).then(r => r.json()),
+          fetch(`${API}/funciones`).then(r => r.json()),
+          fetch(`${API}/peliculas`).then(r => r.json()),
+          fetch(`${API}/salas`).then(r => r.json())
+        ]);
 
-      const tbody = document.getElementById('tablaConsultas');
-      tbody.innerHTML = data.map(item => `
-        <tr>
-          <td>${item.id}</td>
-          <td>${item.campo1}</td>
-          <td>${item.campo2}</td>
-        </tr>
-      `).join('');
+        const tabla = document.getElementById('reservasTabla');
+        tabla.innerHTML = '';
+
+        reservas.forEach((r, i) => {
+          const funcion = funciones.find(f => f.funcion_id == r.funcion_id);
+          const pelicula = pelis.find(p => p.pelicula_id == funcion.pelicula_id);
+          const sala = salas.find(s => s.sala_id == funcion.sala_id);
+          const fecha = new Date(funcion.fecha).toLocaleDateString('es-ES');
+
+          tabla.innerHTML += `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${r.nombre_cliente}</td>
+              <td>${pelicula?.titulo || 'N/D'}</td>
+              <td>${sala?.nombre || 'N/D'}</td>
+              <td>${fecha}</td>
+              <td>${funcion.hora}</td>
+              <td>${r.cantidad}</td>
+            </tr>
+          `;
+        });
+      } catch (error) {
+        console.error('Error al cargar reservas:', error);
+      }
     }
 
-    window.addEventListener('DOMContentLoaded', cargarConsultas);
+    window.addEventListener('DOMContentLoaded', cargarReservas);
   </script>
 </body>
 </html>

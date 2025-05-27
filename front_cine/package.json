@@ -12,6 +12,9 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
+    "fs": "^0.0.1-security",
+    "pdfkit": "^0.17.1",
     "vue": "^3.5.13"
   },
   "devDependencies": {
