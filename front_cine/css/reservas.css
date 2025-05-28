@@ -1,0 +1,106 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat fixed;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.header {
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #222;
+}
+
+
+.logo a {
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #ccc;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #facc15;
+}
+
+h1, h2 {
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+form {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.form-label {
+  color: #ccc;
+}
+
+.custom-select-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.funcion-item {
+  flex: 1 1 250px;
+  background-color: #1f1f1f;
+  border: 2px solid #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.3s;
+}
+
+.funcion-item label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  color: #ddd;
+  width: 100%;
+}
+
+.funcion-thumb {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.funcion-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.funcion-title {
+  font-weight: bold;
+  color: #facc15;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #2d2d2d;
+  border-left: 5px solid #facc15;
+}
+
+input[type="radio"]:checked + label .funcion-title {
+  color: #ffe100;
+}
+
+input[type="radio"] {
+  display: none;
+}

@@ -1,0 +1,9 @@
+Reserva CineApp
+------------------------
+ID Reserva: 91
+Cliente: edwin
+Función ID: 6
+Sala ID: 6
+Fecha: 17/5/2025
+Hora: 14:00
+Entradas: 1

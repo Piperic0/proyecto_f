@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+<<<<<<< HEAD
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cine App - Reservas</title>
   <link rel="stylesheet" href="css/vista.css" />
@@ -61,15 +62,80 @@
           </thead>
           <tbody></tbody>
         </table>
+=======
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Películas - CineApp</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./css/vista.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
+    </div>
+    <nav class="navbar">
+      <a href="peliculas.html">Cartelera</a>
+      <a href="funciones.html">Funciones</a>
+      <a href="reservas.html">Reservas</a>
+      <a href="consultas.html">Consultas</a>
+    </nav>
+  </header>
+
+  <section class="funciones-hero">
+    <h2>🎥 Funciones Programadas</h2>
+    <div class="funciones-carrusel-contenedor">
+      <button class="btn-carrusel izquierda"><i class="fas fa-chevron-left"></i></button>
+      <div class="funciones-carrusel" id="funcionesCarrusel"></div>
+      <button class="btn-carrusel derecha"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+  </section>
+
+  <main>
+    <section class="preview-seccion">
+      <div class="seccion-card cartelera">
+        <div class="seccion-overlay">
+          <h2><i class="fas fa-video"></i> Cartelera</h2>
+          <p>Consulta los últimos estrenos y películas en cartelera.</p>
+          <a href="peliculas.html" class="btn-ir">Ver Cartelera</a>
+        </div>
+      </div>
+      <div class="seccion-card funciones">
+        <div class="seccion-overlay">
+          <h2><i class="fas fa-calendar-alt"></i> Funciones</h2>
+          <p>Horarios, fechas y salas disponibles.</p>
+          <a href="funciones.html" class="btn-ir">Ver Funciones</a>
+        </div>
+      </div>
+      <div class="seccion-card reservas">
+        <div class="seccion-overlay">
+          <h2><i class="fas fa-ticket-alt"></i> Reservas</h2>
+          <p>Reserva tus entradas de forma segura.</p>
+          <a href="reservas.html" class="btn-ir">Reservar</a>
+        </div>
+      </div>
+      <div class="seccion-card consultas">
+        <div class="seccion-overlay">
+          <h2><i class="fas fa-search"></i> Consultas</h2>
+          <p>Consulta tus reservas y detalles.</p>
+          <a href="consultas.html" class="btn-ir">Consultar</a>
+        </div>
+>>>>>>> actualizado
       </div>
     </section>
   </main>
 
+<<<<<<< HEAD
   <footer>
+=======
+  <footer class="footer">
+>>>>>>> actualizado
     <p>&copy; 2025 CineApp. Todos los derechos reservados.</p>
   </footer>
 
   <script>
+<<<<<<< HEAD
     const API = 'http://localhost:5000/api';
 
     async function cargarPeliculas() {
@@ -127,3 +193,42 @@
   </script>
 </body>
 </html>
+=======
+    async function cargarFunciones() {
+      try {
+        const funciones = await fetch('http://localhost:5000/api/funciones').then(r => r.json());
+        const pelis = await fetch('http://localhost:5000/api/peliculas').then(r => r.json());
+        const salas = await fetch('http://localhost:5000/api/salas').then(r => r.json());
+
+        const container = document.getElementById('funcionesCarrusel');
+        container.innerHTML = '';
+
+        funciones.forEach(f => {
+          const pelicula = pelis.find(p => p.pelicula_id == f.pelicula_id);
+          const sala = salas.find(s => s.sala_id == f.sala_id);
+          const fecha = new Date(f.fecha).toLocaleDateString('es-ES');
+
+          const img = pelicula?.imagen || 'https://via.placeholder.com/220x300?text=Sin+Imagen';
+
+          const card = document.createElement('a');
+          card.href = `reservas.html?funcion_id=${f.funcion_id}`;
+          card.className = 'funcion-slide';
+          card.innerHTML = `
+            <img src="${img}" alt="${pelicula?.titulo}">
+            <div class="funcion-texto">
+              <h3>${pelicula?.titulo}</h3>
+              <p>${sala?.nombre} | ${fecha} | ${f.hora}</p>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error cargando funciones:', error);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', cargarFunciones);
+  </script>
+</body>
+</html>
+>>>>>>> actualizado

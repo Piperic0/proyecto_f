@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* CineApp Estilo Oscuro */
 body {
   margin: 0;
@@ -99,4 +100,261 @@ footer {
   padding: 10px;
   margin-top: 30px;
   font-size: 0.9em;
+=======
+/* ===== RESETEO GENERAL ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat fixed;
+  color: #fff;
+  line-height: 1.6;
+}
+
+/* ===== ENCABEZADO ===== */
+.header {
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #222;
+}
+
+.logo a {
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #ccc;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #facc15;
+}
+
+/* ===== CARRUSEL DE FUNCIONES ===== */
+.funciones-hero {
+  background: url('https://images.unsplash.com/photo-1609930028590-21aabfa1c3d0?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.funciones-hero h2 {
+  color: #facc15;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.funciones-carrusel-contenedor {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.funciones-carrusel {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 0 2rem 1.5rem;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.funciones-carrusel::-webkit-scrollbar {
+  height: 0;
+}
+
+.funcion-slide {
+  flex: 0 0 auto;
+  width: 220px;
+  scroll-snap-align: start;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.75);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.funcion-slide img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.funcion-slide:hover {
+  transform: scale(1.05);
+}
+
+.funcion-texto {
+  padding: 1rem;
+  color: #fff;
+}
+
+.funcion-texto h3 {
+  font-size: 1.2rem;
+  color: #facc15;
+  margin-bottom: 0.3rem;
+}
+
+.funcion-texto p {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* Botones de navegación del carrusel */
+.funciones-carrusel {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 0 2rem 1.5rem;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.funciones-carrusel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+
+.btn-carrusel:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.btn-carrusel.izquierda {
+  left: 0;
+}
+
+.btn-carrusel.derecha {
+  right: 0;
+}
+
+/* Gradientes laterales para sombra suave */
+.funciones-hero::before,
+.funciones-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.funciones-hero::before {
+  left: 0;
+  background: linear-gradient(to right, #0e0e0e, transparent);
+}
+
+.funciones-hero::after {
+  right: 0;
+  background: linear-gradient(to left, #0e0e0e, transparent);
+}
+
+/* ===== SECCIONES ===== */
+.preview-seccion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 3rem 2rem;
+}
+
+.seccion-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.seccion-card:hover {
+  transform: scale(1.03);
+}
+
+.seccion-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+}
+
+.seccion-overlay h2 {
+  color: #facc15;
+  margin-bottom: 0.5rem;
+}
+
+.seccion-overlay p {
+  color: #ddd;
+  margin-bottom: 1rem;
+}
+
+.btn-ir {
+  background-color: #facc15;
+  color: #000;
+  padding: 0.5rem 1.2rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-ir:hover {
+  background-color: #e0b700;
+}
+
+/* ===== FONDOS SECCIONES ===== */
+.cartelera {
+  background-image: url('https://image.tmdb.org/t/p/w500/5YZbUmjbMa3ClvSW1Wj3D6XGolb.jpg');
+}
+
+.funciones {
+  background-image: url('https://image.tmdb.org/t/p/w500/czembW0Rk1Ke7lCJGahbOhdCuhV.jpg');
+}
+
+.reservas {
+  background-image: url('https://image.tmdb.org/t/p/w500/9z256FFPDsL7kSVJ9oyLELaN1ph.jpg');
+}
+
+.consultas {
+  background-image: url('https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg');
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #111;
+  color: #555;
+  margin-top: 3rem;
+>>>>>>> actualizado
 }

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Funciones - CineApp</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/consultas.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
+    </div>
+    <nav class="navbar">
+      <a href="peliculas.html">Cartelera</a>
+      <a href="funciones.html">Funciones</a>
+      <a href="reservas.html">Reservas</a>
+      <a href="consultas.html">Consultas</a>
+    </nav>
+  </header>
+
+  <main class="container-fluid mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="page-header">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tarjetas de consulta rápida -->
+    <div class="row mb-5">
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="query-card" onclick="ejecutarConsultaRapida('taquilla-hoy')">
+          <div class="query-icon">
+            <i class="fas fa-calendar-day"></i>
+          </div>
+          <div class="query-content">
+            <h5>Taquilla de Hoy</h5>
+            <p>Ventas y reservas del día actual</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="query-card" onclick="ejecutarConsultaRapida('top-peliculas')">
+          <div class="query-icon">
+            <i class="fas fa-crown"></i>
+          </div>
+          <div class="query-content">
+            <h5>Top Películas</h5>
+            <p>Las 10 películas más populares</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="query-card" onclick="ejecutarConsultaRapida('ocupacion-salas')">
+          <div class="query-icon">
+            <i class="fas fa-door-open"></i>
+          </div>
+          <div class="query-content">
+            <h5>Ocupación de Salas</h5>
+            <p>Rendimiento por sala de cine</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="query-card" onclick="ejecutarConsultaRapida('ingresos-mes')">
+          <div class="query-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="query-content">
+            <h5>Ingresos del Mes</h5>
+            <p>Total facturado este mes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros avanzados -->
+    <div class="row mb-5">
+      <div class="col-lg-4 mb-4">
+        <div class="filter-card">
+          <div class="filter-header">
+            <i class="fas fa-calendar-alt"></i>
+            <h5>Consulta por Fecha</h5>
+          </div>
+          <div class="filter-body">
+            <div class="mb-3">
+              <label class="form-label">Seleccionar fecha:</label>
+              <input type="date" id="fechaConsulta" class="form-control">
+            </div>
+            <button onclick="consultarPorFecha()" class="btn btn-primary w-100">
+              <i class="fas fa-search"></i> Consultar Funciones
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 mb-4">
+        <div class="filter-card">
+          <div class="filter-header">
+            <i class="fas fa-film"></i>
+            <h5>Análisis por Película</h5>
+          </div>
+          <div class="filter-body">
+            <div class="mb-3">
+              <label class="form-label">Seleccionar película:</label>
+              <select id="peliculaSelect" class="form-select">
+                <option value="">Cargando películas...</option>
+              </select>
+            </div>
+            <button onclick="analizarPelicula()" class="btn btn-primary w-100">
+              <i class="fas fa-chart-line"></i> Analizar Rendimiento
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 mb-4">
+        <div class="filter-card">
+          <div class="filter-header">
+            <i class="fas fa-filter"></i>
+            <h5>Filtros Personalizados</h5>
+          </div>
+          <div class="filter-body">
+            <div class="mb-3">
+              <label class="form-label">Entradas mínimas:</label>
+              <input type="number" id="minimoEntradas" class="form-control" placeholder="ej: 50" min="1">
+            </div>
+            <button onclick="peliculasPopulares()" class="btn btn-primary w-100">
+              <i class="fas fa-star"></i> Películas Populares
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Área de resultados -->
+    <div class="results-section">
+      <div class="results-header">
+        <h4 id="tituloResultados"><i class="fas fa-table"></i> Resultados de Consulta</h4>
+        <div class="results-actions">
+          <button onclick="exportarDatos()" class="btn btn-outline-light btn-sm" disabled id="btnExportar">
+            <i class="fas fa-download"></i> Exportar
+          </button>
+          <button onclick="limpiarResultados()" class="btn btn-outline-light btn-sm">
+            <i class="fas fa-trash"></i> Limpiar
+          </button>
+        </div>
+      </div>
+      
+      <div class="results-body">
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+          <div class="spinner-border text-warning" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p>Procesando consulta...</p>
+        </div>
+        
+        <div class="table-container">
+          <table class="table results-table">
+            <thead id="tablaHeader">
+              <!-- Headers dinámicos -->
+            </thead>
+            <tbody id="tablaBody">
+              <tr>
+                <td colspan="100%" class="no-data">
+                  <i class="fas fa-info-circle"></i>
+                  <p>Seleccione una consulta para ver los resultados</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast para notificaciones -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="notificationToast" class="toast" role="alert">
+      <div class="toast-header">
+        <i class="fas fa-bell text-warning me-2"></i>
+        <strong class="me-auto">CineApp</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        Consulta ejecutada correctamente
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+    let datosActuales = [];
+
+    // Configurar fecha actual por defecto
+    document.getElementById('fechaConsulta').valueAsDate = new Date();
+
+    // Datos de ejemplo para películas populares
+    const peliculasEjemplo = [
+      { id: 1, titulo: "Avatar: El Camino del Agua" },
+      { id: 2, titulo: "Avengers: Endgame" },
+      { id: 3, titulo: "Spider-Man: No Way Home" },
+      { id: 4, titulo: "Top Gun: Maverick" },
+      { id: 5, titulo: "Black Panther: Wakanda Forever" },
+      { id: 6, titulo: "Doctor Strange en el Multiverso" },
+      { id: 7, titulo: "Minions: El Origen de Gru" },
+      { id: 8, titulo: "Thor: Love and Thunder" },
+      { id: 9, titulo: "Jurassic World: Dominion" },
+      { id: 10, titulo: "Lightyear" }
+    ];
+
+    // Cargar películas al inicializar
+    async function inicializar() {
+      try {
+        // Intentar cargar desde API, si falla usar datos de ejemplo
+        let peliculas;
+        try {
+          const response = await fetch(`${API_BASE}/peliculas`);
+          peliculas = await response.json();
+        } catch {
+          peliculas = peliculasEjemplo;
+        }
+        
+        const select = document.getElementById('peliculaSelect');
+        select.innerHTML = '<option value="">Seleccione una película</option>';
+        
+        peliculas.forEach(p => {
+          const option = document.createElement('option');
+          option.value = p.pelicula_id || p.id;
+          option.textContent = p.titulo;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error al inicializar:', error);
+        mostrarNotificacion('Error al cargar datos iniciales', 'error');
+      }
+    }
+
+    // Consultas rápidas
+    async function ejecutarConsultaRapida(tipo) {
+      mostrarCargando(true);
+      
+      try {
+        let endpoint, titulo, headers, procesarDatos;
+        
+        switch(tipo) {
+          case 'taquilla-hoy':
+            const hoy = new Date().toISOString().split('T')[0];
+            endpoint = `consultas/funciones-por-fecha/${hoy}`;
+            titulo = 'Funciones de Hoy';
+            headers = ['Función', 'Película', 'Sala', 'Hora', 'Estado'];
+            procesarDatos = (data) => data.map(item => [
+              `#${item.funcion_id}`,
+              item.titulo,
+              item.sala,
+              item.hora,
+              '<span class="badge bg-success">Disponible</span>'
+            ]);
+            break;
+            
+          case 'top-peliculas':
+            endpoint = 'consultas/reservas-por-pelicula';
+            titulo = 'Top 10 Películas Más Reservadas';
+            headers = ['Ranking', 'Película', 'Total Reservas', 'Popularidad'];
+            procesarDatos = (data) => data.slice(0, 10).map((item, index) => [
+              `#${index + 1}`,
+              item.titulo,
+              item.total_reservas,
+              generarBarraProgreso(item.total_reservas, Math.max(...data.map(d => d.total_reservas)))
+            ]);
+            break;
+            
+          case 'ocupacion-salas':
+            endpoint = 'consultas/ventas-por-sala';
+            titulo = 'Ocupación por Sala';
+            headers = ['Sala', 'Entradas Vendidas', 'Rendimiento'];
+            procesarDatos = (data) => data.map(item => [
+              item.sala,
+              item.total_entradas,
+              generarIndicadorRendimiento(item.total_entradas, 100)
+            ]);
+            break;
+            
+          case 'ingresos-mes':
+            // Datos simulados para ingresos
+            const datosIngresos = [
+              { concepto: 'Entradas Vendidas', valor: 1250, porcentaje: 85 },
+              { concepto: 'Comida y Bebidas', valor: 450, porcentaje: 30 },
+              { concepto: 'Descuentos Aplicados', valor: -85, porcentaje: -5 }
+            ];
+            
+            titulo = 'Resumen de Ingresos del Mes';
+            headers = ['Concepto', 'Cantidad', 'Ingresos ($)', 'Variación'];
+            mostrarResultados(titulo, headers, datosIngresos.map(item => [
+              item.concepto,
+              item.valor > 0 ? item.valor : Math.abs(item.valor),
+              item.valor > 0 ? `$${(item.valor * 12).toLocaleString()}` : `-$${(Math.abs(item.valor) * 12).toLocaleString()}`,
+              generarIndicadorCambio(item.porcentaje)
+            ]));
+            mostrarCargando(false);
+            return;
+        }
+        
+        const response = await fetch(`${API_BASE}/${endpoint}`);
+        const data = await response.json();
+        
+        if (data.length === 0) {
+          mostrarSinDatos('No se encontraron datos para esta consulta');
+        } else {
+          mostrarResultados(titulo, headers, procesarDatos(data));
+          mostrarNotificacion('Consulta ejecutada correctamente');
+        }
+        
+      } catch (error) {
+        console.error('Error en consulta rápida:', error);
+        mostrarError('Error al ejecutar la consulta rápida');
+      } finally {
+        mostrarCargando(false);
+      }
+    }
+
+    // Consulta por fecha
+    async function consultarPorFecha() {
+      const fecha = document.getElementById('fechaConsulta').value;
+      if (!fecha) {
+        mostrarNotificacion('Por favor seleccione una fecha', 'warning');
+        return;
+      }
+
+      mostrarCargando(true);
+      
+      try {
+        const response = await fetch(`${API_BASE}/consultas/funciones-por-fecha/${fecha}`);
+        const data = await response.json();
+        
+        const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        mostrarResultados(`Funciones del ${fechaFormateada}`, [
+          'ID', 'Película', 'Sala', 'Hora', 'Capacidad', 'Estado'
+        ], data.map(item => [
+          `#${item.funcion_id}`,
+          item.titulo,
+          item.sala,
+          item.hora,
+          '100 asientos', // Datos simulados
+          '<span class="badge bg-info">Programada</span>'
+        ]));
+        
+        mostrarNotificacion('Funciones cargadas correctamente');
+        
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarError('Error al consultar funciones por fecha');
+      } finally {
+        mostrarCargando(false);
+      }
+    }
+
+    // Análisis de película específica
+    async function analizarPelicula() {
+      const peliculaId = document.getElementById('peliculaSelect').value;
+      if (!peliculaId) {
+        mostrarNotificacion('Por favor seleccione una película', 'warning');
+        return;
+      }
+
+      mostrarCargando(true);
+      
+      try {
+        // Obtener datos de la película
+        const peliculaTitulo = document.getElementById('peliculaSelect').selectedOptions[0].text;
+        
+        // Simular datos de análisis detallado
+        const datosAnalisis = [
+          { metrica: 'Total de Funciones', valor: '24', tendencia: '+12%' },
+          { metrica: 'Entradas Vendidas', valor: '1,847', tendencia: '+8%' },
+          { metrica: 'Ocupación Promedio', valor: '78%', tendencia: '+5%' },
+          { metrica: 'Ingresos Totales', valor: '$18,470', tendencia: '+15%' },
+          { metrica: 'Puntuación Promedio', valor: '4.2/5', tendencia: '±0%' }
+        ];
+        
+        mostrarResultados(`Análisis Detallado: ${peliculaTitulo}`, [
+          'Métrica', 'Valor Actual', 'Tendencia', 'Estado'
+        ], datosAnalisis.map(item => [
+          item.metrica,
+          item.valor,
+          item.tendencia,
+          generarEstadoMetrica(item.tendencia)
+        ]));
+        
+        mostrarNotificacion('Análisis de película completado');
+        
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarError('Error al analizar la película');
+      } finally {
+        mostrarCargando(false);
+      }
+    }
+
+    // Películas populares con filtro
+    async function peliculasPopulares() {
+      const minimo = document.getElementById('minimoEntradas').value;
+      if (!minimo || minimo < 1) {
+        mostrarNotificacion('Por favor ingrese un número mínimo válido', 'warning');
+        return;
+      }
+
+      mostrarCargando(true);
+      
+      try {
+        const response = await fetch(`${API_BASE}/consultas/peliculas-mas-reservadas/${minimo}`);
+        const data = await response.json();
+        
+        mostrarResultados(`Películas con más de ${minimo} entradas vendidas`, [
+          'Ranking', 'Película', 'Entradas Vendidas', 'Porcentaje del Total'
+        ], data.map((item, index) => [
+          `#${index + 1}`,
+          item.titulo,
+          item.total_reservado.toLocaleString(),
+          generarPorcentaje(item.total_reservado, data.reduce((sum, d) => sum + d.total_reservado, 0))
+        ]));
+        
+        mostrarNotificacion('Consulta de películas populares completada');
+        
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarError('Error al consultar películas populares');
+      } finally {
+        mostrarCargando(false);
+      }
+    }
+
+    // Utilidades para generar elementos visuales
+    function generarBarraProgreso(valor, maximo) {
+      const porcentaje = (valor / maximo) * 100;
+      return `
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${porcentaje}%"></div>
+          <span class="progress-text">${porcentaje.toFixed(1)}%</span>
+        </div>
+      `;
+    }
+
+    function generarIndicadorRendimiento(valor, base) {
+      const porcentaje = (valor / base) * 100;
+      let clase = 'success';
+      if (porcentaje < 50) clase = 'danger';
+      else if (porcentaje < 75) clase = 'warning';
+      
+      return `<span class="badge bg-${clase}">${porcentaje.toFixed(1)}%</span>`;
+    }
+
+    function generarIndicadorCambio(porcentaje) {
+      const icono = porcentaje > 0 ? 'fa-arrow-up text-success' : 
+                   porcentaje < 0 ? 'fa-arrow-down text-danger' : 'fa-minus text-muted';
+      return `<i class="fas ${icono}"></i> ${Math.abs(porcentaje)}%`;
+    }
+
+    function generarEstadoMetrica(tendencia) {
+      if (tendencia.includes('+')) return '<span class="badge bg-success">Creciendo</span>';
+      if (tendencia.includes('-')) return '<span class="badge bg-danger">Decreciendo</span>';
+      return '<span class="badge bg-secondary">Estable</span>';
+    }
+
+    function generarPorcentaje(valor, total) {
+      const porcentaje = (valor / total) * 100;
+      return `${porcentaje.toFixed(1)}%`;
+    }
+
+    // Funciones de interfaz
+    function mostrarResultados(titulo, headers, data) {
+      document.getElementById('tituloResultados').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
+      
+      const headerRow = document.getElementById('tablaHeader');
+      headerRow.innerHTML = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+      
+      const body = document.getElementById('tablaBody');
+      if (data.length === 0) {
+        mostrarSinDatos('No se encontraron resultados para esta consulta');
+      } else {
+        body.innerHTML = data.map((row, index) => 
+          `<tr class="animate-row" style="animation-delay: ${index * 0.1}s">` + 
+          row.map(cell => `<td>${cell}</td>`).join('') + 
+          '</tr>'
+        ).join('');
+        
+        datosActuales = data;
+        document.getElementById('btnExportar').disabled = false;
+      }
+    }
+
+    function mostrarSinDatos(mensaje) {
+      const body = document.getElementById('tablaBody');
+      body.innerHTML = `
+        <tr>
+          <td colspan="100%" class="no-data">
+            <i class="fas fa-inbox"></i>
+            <p>${mensaje}</p>
+          </td>
+        </tr>
+      `;
+    }
+
+    function mostrarError(mensaje) {
+      const body = document.getElementById('tablaBody');
+      body.innerHTML = `
+        <tr>
+          <td colspan="100%" class="error-data">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>${mensaje}</p>
+          </td>
+        </tr>
+      `;
+    }
+
+    function mostrarCargando(mostrar) {
+      document.getElementById('loadingSpinner').style.display = mostrar ? 'flex' : 'none';
+    }
+
+    function mostrarNotificacion(mensaje, tipo = 'success') {
+      const toast = document.getElementById('notificationToast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toastMessage.textContent = mensaje;
+      toast.className = `toast ${tipo === 'error' ? 'border-danger' : tipo === 'warning' ? 'border-warning' : 'border-success'}`;
+      
+      const bsToast = new bootstrap.Toast(toast);
+      bsToast.show();
+    }
+
+    function limpiarResultados() {
+      document.getElementById('tituloResultados').innerHTML = '<i class="fas fa-table"></i> Resultados de Consulta';
+      document.getElementById('tablaHeader').innerHTML = '';
+      document.getElementById('tablaBody').innerHTML = `
+        <tr>
+          <td colspan="100%" class="no-data">
+            <i class="fas fa-info-circle"></i>
+            <p>Seleccione una consulta para ver los resultados</p>
+          </td>
+        </tr>
+      `;
+      datosActuales = [];
+      document.getElementById('btnExportar').disabled = true;
+    }
+
+    function exportarDatos() {
+      if (datosActuales.length === 0) return;
+      
+      // Simular exportación
+      mostrarNotificacion('Función de exportación en desarrollo');
+    }
+
+    // Inicializar aplicación
+    window.addEventListener('DOMContentLoaded', inicializar);
+  </script>
+</body>
+</html>

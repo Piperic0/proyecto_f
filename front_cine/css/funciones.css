@@ -1,0 +1,367 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat fixed;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.header {
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #222;
+}
+
+.logo a {
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #ccc;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #facc15;
+}
+
+.logo {
+  font-size: 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #ccc;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover, .navbar a.active {
+  color: #facc15;
+}
+
+/* Contenido principal */
+.main-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bienvenida {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.bienvenida h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #facc15;
+}
+
+.bienvenida p {
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+.resaltado {
+  color: #facc15;
+}
+
+/* Sección de tabla */
+.seccion {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.seccion h2 {
+  color: #facc15;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.tabla-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.tabla-funciones {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1rem;
+}
+
+.tabla-funciones th,
+.tabla-funciones td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.tabla-funciones th {
+  background-color: #222;
+  color: #facc15;
+  font-weight: 600;
+  border-bottom: 2px solid #333;
+}
+
+.tabla-funciones tr:nth-child(even) {
+  background-color: #222;
+}
+
+.tabla-funciones tr:hover {
+  background-color: #333;
+}
+
+.tabla-funciones td {
+  border-bottom: 1px solid #333;
+}
+
+/* Película con imagen */
+.pelicula-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pelicula-thumb {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #333;
+}
+
+.no-data, .error-msg {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+.error-msg {
+  color: #ff6b6b;
+}
+
+/* Sección de reservas mejorada */
+#cuadroReservas {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#cuadroReservas h4 {
+  color: #facc15;
+  margin-bottom: 1rem;
+}
+
+#cuadroReservas .card {
+  border: 1px solid #444;
+  background-color: #2a2a2a !important;
+}
+
+#cuadroReservas .card-body {
+  padding: 1rem;
+}
+
+/* Reservas grid */
+.reservas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.reserva-card {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.reserva-card:hover {
+  transform: translateY(-2px);
+  border-color: #facc15;
+}
+
+.reserva-card h6 {
+  color: #facc15;
+  margin-bottom: 0.5rem;
+}
+
+.reserva-card .badge {
+  background-color: #facc15 !important;
+  color: #000 !important;
+}
+
+/* Reservas */
+.reservas-fila td {
+  background-color: #111;
+  padding: 1rem 2rem;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #222;
+}
+
+.lista-reservas {
+  list-style: none;
+  padding-left: 0;
+  color: #eee;
+}
+
+.lista-reservas li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #333;
+}
+
+.sin-reservas {
+  color: #888;
+  font-style: italic;
+}
+
+/* Botones */
+.btn-accion {
+  background-color: #facc15;
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-accion:hover {
+  background-color: #e0b700;
+}
+
+/* Estados de carga */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #333;
+  border-radius: 50%;
+  border-top-color: #facc15;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+/* Mensajes de estado */
+.mensaje-estado {
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.mensaje-estado.exito {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.mensaje-estado.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.mensaje-estado.advertencia {
+  background-color: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+.footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #111;
+  color: #555;
+  margin-top: 3rem;
+  border-top: 1px solid #222;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .navbar a {
+    margin: 0;
+  }
+  
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .bienvenida h1 {
+    font-size: 2rem;
+  }
+  
+  .tabla-funciones th,
+  .tabla-funciones td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .pelicula-thumb {
+    width: 40px;
+    height: 60px;
+  }
+}
