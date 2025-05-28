@@ -9,18 +9,18 @@
   <link rel="stylesheet" href="css/funciones.css" />
 </head>
 <body>
-  <!-- Header y Navbar -->
+  <!-- Header -->
   <header class="header">
-  <div class="logo">
-    <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
-  </div>
-  <nav class="navbar">
-    <a href="peliculas.html">Cartelera</a>
-    <a href="funciones.html">Funciones</a>
-    <a href="reservas.html">Reservas</a>
-    <a href="consultas.html">Consultas</a>
-  </nav>
-</header>
+    <div class="logo">
+      <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
+    </div>
+    <nav class="navbar">
+      <a href="peliculas.html">Cartelera</a>
+      <a href="funciones.html">Funciones</a>
+      <a href="reservas.html">Reservas</a>
+      <a href="consultas.html">Consultas</a>
+    </nav>
+  </header>
 
   <!-- Contenido principal -->
   <div class="main-content">
@@ -29,7 +29,6 @@
       <p>Consulta las funciones programadas para nuestras películas en <span class="resaltado">CineApp</span>.</p>
     </div>
 
-    <!-- Tabla de Funciones -->
     <div class="seccion tabla-seccion">
       <h2>Funciones Programadas</h2>
       <div id="loading" class="text-center py-4">
@@ -48,9 +47,7 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody id="tablaFunciones">
-            <!-- Se cargan funciones con JS -->
-          </tbody>
+          <tbody id="tablaFunciones"></tbody>
         </table>
       </div>
       <div id="error-container" style="display: none;" class="text-center py-4">
@@ -63,158 +60,64 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer text-center py-3 bg-dark text-light">
     &copy; 2025 CineApp. Todos los derechos reservados.
   </footer>
 
-  <!-- JS -->
   <script>
     const API = 'http://localhost:5000/api';
-    const loadingElement = document.getElementById('loading');
-    const tableContainer = document.getElementById('tablaContainer');
-    const errorContainer = document.getElementById('error-container');
-    const errorMessage = document.getElementById('error-message');
-    const retryButton = document.getElementById('retry-button');
     const tablaFunciones = document.getElementById('tablaFunciones');
-
-    retryButton.addEventListener('click', () => {
-      showLoading();
-      cargarFunciones();
-    });
-
-    function showLoading() {
-      loadingElement.style.display = 'block';
-      tableContainer.style.display = 'none';
-      errorContainer.style.display = 'none';
-    }
-
-    function showError(mensaje) {
-      loadingElement.style.display = 'none';
-      tableContainer.style.display = 'none';
-      errorContainer.style.display = 'block';
-      errorMessage.textContent = mensaje || 'Error al cargar datos. Intente nuevamente más tarde.';
-    }
-
-    function showTable() {
-      loadingElement.style.display = 'none';
-      tableContainer.style.display = 'block';
-      errorContainer.style.display = 'none';
-    }
-
-    async function fetchWithTimeout(url, options = {}, timeout = 8000) {
-      const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), timeout);
-      try {
-        const response = await fetch(url, { ...options, signal: controller.signal });
-        clearTimeout(id);
-        return response;
-      } catch (error) {
-        clearTimeout(id);
-        throw error;
-      }
-    }
 
     async function cargarFunciones() {
       try {
-        showLoading();
-        const resFunciones = await fetchWithTimeout(`${API}/funciones`);
-        if (!resFunciones.ok) throw new Error(`Error al cargar funciones: ${resFunciones.status}`);
-        const funciones = await resFunciones.json();
+        document.getElementById('loading').style.display = 'block';
 
-        const resPeliculas = await fetchWithTimeout(`${API}/peliculas`);
-        if (!resPeliculas.ok) throw new Error(`Error al cargar películas: ${resPeliculas.status}`);
-        const pelis = await resPeliculas.json();
-
-        const resSalas = await fetchWithTimeout(`${API}/salas`);
-        if (!resSalas.ok) throw new Error(`Error al cargar salas: ${resSalas.status}`);
-        const salas = await resSalas.json();
-
-        const getPelicula = id => {
-          const pelicula = pelis.find(p => p.pelicula_id == id);
-          if (pelicula) {
-            const img = pelicula.imagen || `https://via.placeholder.com/80x120?text=${encodeURIComponent(pelicula.titulo)}`;
-            return `
-              <div class="pelicula-info">
-                <img src="${img}" alt="${pelicula.titulo}" class="pelicula-thumb">
-                <span>${pelicula.titulo}</span>
-              </div>
-            `;
-          } else {
-            return `<span>Película ${id}</span>`;
-          }
-        };
-
-        const getSala = id => {
-          const sala = salas.find(s => s.sala_id == id);
-          return sala ? sala.nombre : `Sala ${id}`;
-        };
+        const [funciones, pelis, salas] = await Promise.all([
+          fetch(`${API}/funciones`).then(r => r.json()),
+          fetch(`${API}/peliculas`).then(r => r.json()),
+          fetch(`${API}/salas`).then(r => r.json())
+        ]);
 
         tablaFunciones.innerHTML = '';
 
-        if (funciones.length === 0) {
-          tablaFunciones.innerHTML = '<tr><td colspan="6" class="no-data">No hay funciones disponibles</td></tr>';
-          showTable();
-          return;
-        }
-
-        for (const funcion of funciones) {
-          const peliculaHTML = getPelicula(funcion.pelicula_id);
-          const sala = getSala(funcion.sala_id);
-          const fecha = new Date(funcion.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        funciones.forEach(funcion => {
+          const pelicula = pelis.find(p => p.pelicula_id === funcion.pelicula_id);
+          const sala = salas.find(s => s.sala_id === funcion.sala_id);
+          const fecha = new Date(funcion.fecha).toLocaleDateString('es-ES');
+          const img = pelicula?.imagen || 'https://via.placeholder.com/80x120?text=Sin+Imagen';
 
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${funcion.funcion_id}</td>
-            <td>${peliculaHTML}</td>
-            <td>${sala}</td>
+            <td>
+              <a href="reservas.html?funcion_id=${funcion.funcion_id}" class="d-flex align-items-center text-decoration-none text-light gap-2">
+                <img src="${img}" alt="${pelicula?.titulo}" class="pelicula-thumb" style="width:50px;height:auto;border-radius:4px;">
+                <span>${pelicula?.titulo}</span>
+              </a>
+            </td>
+            <td>${sala?.nombre || 'Sala N/D'}</td>
             <td>${fecha}</td>
             <td>${funcion.hora}</td>
             <td>
-              <button class="btn-accion" onclick="verReservas(${funcion.funcion_id})">
+              <button class="btn btn-warning btn-sm" onclick="verReservas(${funcion.funcion_id})">
                 <i class="fas fa-ticket-alt"></i> Ver reservas
               </button>
             </td>
           `;
           tablaFunciones.appendChild(row);
-        }
+        });
 
-        showTable();
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('tablaContainer').style.display = 'block';
       } catch (error) {
-        console.error("Error al cargar las funciones:", error);
-        showError(error.message || "Error al conectar con el servidor.");
+        console.error('Error:', error);
+        document.getElementById('error-container').style.display = 'block';
+        document.getElementById('loading').style.display = 'none';
       }
     }
 
     async function verReservas(funcionId) {
-      try {
-        const response = await fetch(`${API}/consultas/reservas-funcion/${funcionId}`);
-        if (!response.ok) throw new Error(`Error al cargar reservas (${response.status})`);
-        const reservas = await response.json();
-
-        const existing = document.querySelector(`.reservas-fila[data-id="${funcionId}"]`);
-        if (existing) {
-          existing.remove();
-          return;
-        }
-        document.querySelectorAll('.reservas-fila').forEach(fila => fila.remove());
-
-        const fila = document.querySelector(`button[onclick="verReservas(${funcionId})"]`).closest('tr');
-        const newRow = document.createElement('tr');
-        newRow.classList.add('reservas-fila');
-        newRow.setAttribute('data-id', funcionId);
-
-        const colspan = fila.children.length;
-        const contenido = reservas.length === 0
-          ? '<p class="sin-reservas">No hay reservas para esta función.</p>'
-          : `<ul class="lista-reservas">${reservas.map(r => `<li><strong>${r.nombre_cliente}</strong> reservó ${r.cantidad} entradas</li>`).join('')}</ul>`;
-
-        newRow.innerHTML = `<td colspan="${colspan}">${contenido}</td>`;
-        fila.parentNode.insertBefore(newRow, fila.nextSibling);
-      } catch (error) {
-        console.error("Error al obtener reservas:", error);
-        alert("No se pudieron cargar las reservas: " + error.message);
-      }
+      alert("Aquí puedes implementar la vista de reservas por función: " + funcionId);
     }
 
     window.addEventListener('DOMContentLoaded', cargarFunciones);

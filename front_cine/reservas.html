@@ -10,7 +10,6 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header class="header">
     <div class="logo">
       <a href="index.html"><i class="fas fa-film"></i> CineApp</a>
@@ -23,9 +22,9 @@
     </nav>
   </header>
 
-  <!-- Main -->
   <main class="container mt-5">
     <h1 class="text-warning mb-4"><i class="fas fa-ticket-alt"></i> Reservar Entradas</h1>
+
     <form id="reservaForm" class="row g-3 bg-dark p-4 rounded shadow">
       <div class="col-12">
         <label for="funcionesList" class="form-label">Selecciona una función</label>
@@ -43,12 +42,20 @@
         <button type="submit" class="btn btn-warning w-100">Reservar</button>
       </div>
     </form>
+
     <p id="reservaMensaje" class="mt-3 text-light"></p>
   </main>
 
-  <!-- Script -->
   <script>
     const API = 'http://localhost:5000/api';
+
+    function getQueryParam(param) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    }
+
+    const funcionIdPreseleccionada = parseInt(getQueryParam('funcion_id'));
+    const peliculaIdSeleccionada = parseInt(getQueryParam('pelicula_id'));
 
     document.addEventListener('DOMContentLoaded', cargarFunciones);
     document.getElementById('reservaForm').addEventListener('submit', crearReserva);
@@ -64,6 +71,14 @@
         const container = document.getElementById('funcionesList');
         container.innerHTML = '';
 
+        let primeraFuncionDePelicula = null;
+        if (!funcionIdPreseleccionada && peliculaIdSeleccionada) {
+          const funcionesDePelicula = funciones.filter(f => f.pelicula_id === peliculaIdSeleccionada);
+          if (funcionesDePelicula.length > 0) {
+            primeraFuncionDePelicula = funcionesDePelicula[0].funcion_id;
+          }
+        }
+
         funciones.forEach(funcion => {
           const pelicula = peliculas.find(p => p.pelicula_id === funcion.pelicula_id);
           const sala = salas.find(s => s.sala_id === funcion.sala_id);
@@ -72,7 +87,8 @@
 
           container.innerHTML += `
             <div class="funcion-item">
-              <input type="radio" name="funcionSeleccionada" id="funcion-${funcion.funcion_id}" value="${funcion.funcion_id}">
+              <input type="radio" name="funcionSeleccionada" id="funcion-${funcion.funcion_id}" value="${funcion.funcion_id}"
+                ${funcion.funcion_id === funcionIdPreseleccionada || funcion.funcion_id === primeraFuncionDePelicula ? 'checked' : ''}>
               <label for="funcion-${funcion.funcion_id}">
                 <img src="${img}" alt="${pelicula?.titulo}" class="funcion-thumb">
                 <div class="funcion-info">
@@ -97,12 +113,7 @@
       const nombreCliente = document.getElementById('nombreCliente').value.trim();
       const cantidad = parseInt(document.getElementById('cantidad').value);
 
-      if (!funcionSeleccionada) {
-        alert('Selecciona una función');
-        return;
-      }
-
-      if (!nombreCliente || isNaN(cantidad) || cantidad < 1) {
+      if (!funcionSeleccionada || !nombreCliente || isNaN(cantidad) || cantidad < 1) {
         alert('Completa todos los campos correctamente');
         return;
       }

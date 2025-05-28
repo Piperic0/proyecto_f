@@ -83,8 +83,9 @@ router.post('/', async (req, res) => {
   // Validación básica de campos requeridos
   if (!titulo || !genero || !duracion) {
     return res.status(400).json({ message: 'Faltan campos requeridos: titulo, genero o duracion' });
+    
   }
-
+  
   try {
     await client.query(
       'INSERT INTO pelicula (titulo, genero, duracion, imagen) VALUES ($1, $2, $3, $4)',
