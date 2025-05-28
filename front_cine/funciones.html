@@ -50,6 +50,27 @@
           <tbody id="tablaFunciones"></tbody>
         </table>
       </div>
+      
+      <!-- Cuadro de Reservas -->
+      <div id="cuadroReservas" style="display:none;" class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-light">🎟️ Reservas para la función seleccionada</h4>
+          <button class="btn btn-secondary btn-sm" onclick="cerrarReservas()">
+            <i class="fas fa-times"></i> Cerrar
+          </button>
+        </div>
+        <div class="card bg-dark text-white">
+          <div class="card-body">
+            <div id="reservasContenido">
+              <div class="text-center">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Cargando reservas...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="error-container" style="display: none;" class="text-center py-4">
         <i class="fas fa-exclamation-triangle fa-2x" style="color: #ff6b6b;"></i>
         <p id="error-message" class="mt-2 error-msg">Error al cargar datos.</p>
@@ -116,10 +137,96 @@
       }
     }
 
+    // Función corregida para ver reservas
     async function verReservas(funcionId) {
-      alert("Aquí puedes implementar la vista de reservas por función: " + funcionId);
+      try {
+        // Mostrar el cuadro de reservas con loading
+        const cuadro = document.getElementById('cuadroReservas');
+        const contenedor = document.getElementById('reservasContenido');
+        
+        contenedor.innerHTML = `
+          <div class="text-center">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando reservas...</p>
+          </div>
+        `;
+        
+        cuadro.style.display = 'block';
+        cuadro.scrollIntoView({ behavior: 'smooth' });
+
+        // Obtener las reservas desde la API
+        const respuesta = await fetch(`${API}/reservas`);
+        
+        if (!respuesta.ok) {
+          throw new Error(`Error HTTP: ${respuesta.status}`);
+        }
+        
+        const reservas = await respuesta.json();
+
+        // Filtrar reservas por función
+        const reservasFiltradas = reservas.filter(r => r.funcion_id === funcionId);
+
+        if (reservasFiltradas.length === 0) {
+          contenedor.innerHTML = `
+            <div class="text-center py-4">
+              <i class="fas fa-inbox fa-2x text-warning mb-3"></i>
+              <p class="text-warning mb-0">No hay reservas para esta función.</p>
+            </div>
+          `;
+        } else {
+          // Mostrar las reservas
+          contenedor.innerHTML = `
+            <div class="row">
+              <div class="col-12">
+                <p class="mb-3"><strong>Total de reservas:</strong> ${reservasFiltradas.length}</p>
+              </div>
+            </div>
+            <div class="row">
+              ${reservasFiltradas.map(r => `
+                <div class="col-md-6 col-lg-4 mb-3">
+                  <div class="card bg-secondary text-white h-100">
+                    <div class="card-body">
+                      <h6 class="card-title">
+                        <i class="fas fa-user"></i> ${r.nombre_cliente}
+                      </h6>
+                      <p class="card-text mb-2">
+                        <strong>Reserva ID:</strong> ${r.reserva_id}
+                      </p>
+                      <p class="card-text mb-2">
+                        <strong>Entradas:</strong> 
+                        <span class="badge bg-warning text-dark">${r.cantidad}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+      } catch (error) {
+        console.error('Error al cargar reservas:', error);
+        document.getElementById('reservasContenido').innerHTML = `
+          <div class="text-center py-4">
+            <i class="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+            <p class="text-danger mb-0">❌ Error al cargar las reservas: ${error.message}</p>
+            <button class="btn btn-outline-light btn-sm mt-2" onclick="verReservas(${funcionId})">
+              <i class="fas fa-sync"></i> Reintentar
+            </button>
+          </div>
+        `;
+      }
     }
 
+    // Función para cerrar el cuadro de reservas
+    function cerrarReservas() {
+      document.getElementById('cuadroReservas').style.display = 'none';
+    }
+
+    // Botón de reintentar
+    document.getElementById('retry-button')?.addEventListener('click', cargarFunciones);
+
+    // Cargar funciones al iniciar
     window.addEventListener('DOMContentLoaded', cargarFunciones);
   </script>
 </body>

@@ -6,7 +6,7 @@ body {
 }
 
 .header {
-  background: rgba(0, 0, 0, 0.85);
+  background: url('https://www.shutterstock.com/image-vector/empty-stage-glowing-red-color-600nw-2529171671.jpg') center/cover no-repeat;
   display: flex;
   justify-content: space-between;
   align-items: center;

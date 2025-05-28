@@ -1,0 +1,9 @@
+Reserva CineApp
+------------------------
+ID Reserva: 90
+Cliente: juan pabloooo
+Función ID: 11
+Sala ID: 3
+Fecha: 18/5/2025
+Hora: 17:00
+Entradas: 2

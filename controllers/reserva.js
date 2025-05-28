@@ -37,13 +37,11 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Validar función existente
     const funcionResult = await client.query('SELECT * FROM funcion WHERE funcion_id = $1', [funcion_id]);
     if (funcionResult.rowCount === 0) {
       return res.status(404).json({ message: `Función ID ${funcion_id} no encontrada` });
     }
 
-    // Insertar reserva
     const insertResult = await client.query(
       'INSERT INTO reserva (funcion_id, nombre_cliente, cantidad) VALUES ($1, $2, $3) RETURNING reserva_id',
       [funcion_id, nombre_cliente, cantidad]
@@ -52,13 +50,12 @@ router.post('/', async (req, res) => {
     const funcion = funcionResult.rows[0];
     const fecha = new Date(funcion.fecha).toLocaleDateString('es-ES');
 
-    // Crear carpeta /archivos si no existe
     const carpeta = path.join(__dirname, '..', 'archivos');
     if (!fs.existsSync(carpeta)) fs.mkdirSync(carpeta);
 
     const nombreBase = `reserva_${reserva_id}`;
 
-    // ========== PDF ==========
+    // PDF
     const pdfPath = path.join(carpeta, `${nombreBase}.pdf`);
     const pdfDoc = new PDFDocument();
     pdfDoc.pipe(fs.createWriteStream(pdfPath));
@@ -73,7 +70,7 @@ router.post('/', async (req, res) => {
     pdfDoc.text(`Entradas: ${cantidad}`);
     pdfDoc.end();
 
-    // ========== TXT ==========
+    // TXT
     const txtPath = path.join(carpeta, `${nombreBase}.txt`);
     const contenidoTXT = `
 Reserva CineApp
@@ -88,7 +85,7 @@ Entradas: ${cantidad}
 `.trim();
     fs.writeFileSync(txtPath, contenidoTXT);
 
-    // ========== Excel ==========
+    // Excel
     const excelPath = path.join(carpeta, `${nombreBase}.xlsx`);
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet('Reserva');
